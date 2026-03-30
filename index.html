@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wongoji.com — TOPIK II Writing Practice</title>
+<title>Wongoji.com — Korean Writing Practice</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,11 +27,7 @@
 
   header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .header-right { display: flex; align-items: center; gap: 16px; }
 
   .streak-badge {
     display: flex;
@@ -47,10 +43,49 @@
   .streak-fire { font-size: 18px; }
   .streak-count { color: #ffd166; }
   .streak-label { color: #aaa; font-weight: 400; font-size: 11px; }
-
-  header span { font-size: 13px; color: #aaa; }
+  header span.version { font-size: 13px; color: #aaa; }
 
   .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ── Mobile banner ── */
+  .mobile-banner {
+    background: #1a1a2e;
+    color: white;
+    padding: 10px 16px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+  }
+
+  .mobile-banner.show { display: block; }
+
+  /* ── Mode tabs ── */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .mode-tab {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: white;
+    color: #888;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .mode-tab.active { color: #1a1a2e; border-bottom-color: #e63946; background: #fafafa; }
+  .mode-tab:hover { background: #f5f5f5; }
 
   /* ── Prompt ── */
   .prompt-box {
@@ -71,33 +106,17 @@
     gap: 8px;
   }
 
-  .prompt-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #e63946;
-  }
-
+  .prompt-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e63946; }
   .prompt-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
   .prompt-nav { display: flex; align-items: center; gap: 4px; }
-
   .prompt-counter { font-size: 12px; color: #888; font-weight: 600; min-width: 36px; text-align: center; }
 
   .nav-btn {
     width: 28px; height: 28px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: white;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #555;
-    transition: all 0.15s;
-    padding: 0;
+    border-radius: 6px; border: 1px solid #ddd;
+    background: white; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    color: #555; transition: all 0.15s; padding: 0;
   }
 
   .nav-btn:hover { background: #1a1a2e; color: white; border-color: #1a1a2e; }
@@ -106,26 +125,29 @@
   .lang-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
 
   .lang-select {
-    padding: 3px 8px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-size: 12px;
-    background: white;
-    cursor: pointer;
+    padding: 3px 8px; border-radius: 6px; border: 1px solid #ddd;
+    font-size: 12px; background: white; cursor: pointer;
   }
 
   .prompt-korean { font-size: 15px; line-height: 1.7; color: #333; }
   .prompt-korean strong { color: #1a1a2e; }
 
+  .free-write-header {
+    background: white;
+    border-left: 4px solid #2a9d8f;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .free-write-header h2 { font-size: 16px; color: #1a1a2e; margin-bottom: 4px; }
+  .free-write-header p { font-size: 13px; color: #888; }
+
   .translation-box {
-    margin-top: 12px;
-    padding: 12px 14px;
-    background: #f0f7ff;
-    border-left: 3px solid #3b82f6;
-    border-radius: 0 6px 6px 0;
-    font-size: 13px;
-    line-height: 1.6;
-    display: none;
+    margin-top: 12px; padding: 12px 14px;
+    background: #f0f7ff; border-left: 3px solid #3b82f6;
+    border-radius: 0 6px 6px 0; font-size: 13px; line-height: 1.6; display: none;
   }
 
   .translation-box.show { display: block; }
@@ -134,39 +156,24 @@
 
   /* ── Timer ── */
   .timer-bar {
-    background: white;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    background: white; border-radius: 8px; padding: 12px 16px;
+    margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
 
   .timer-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; }
 
   .timer-display {
-    font-size: 28px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: #1a1a2e;
-    letter-spacing: 2px;
-    min-width: 90px;
+    font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums;
+    color: #1a1a2e; letter-spacing: 2px; min-width: 90px;
   }
 
   .timer-display.warning { color: #e63946; }
   .timer-display.done { color: #e63946; animation: pulse 0.8s infinite; }
 
   .jpm-display {
-    font-size: 13px;
-    color: #888;
-    display: none;
-    background: #f0f7ff;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
+    font-size: 13px; color: #888; display: none;
+    background: #f0f7ff; padding: 4px 10px; border-radius: 20px; font-weight: 600;
   }
 
   .jpm-display.show { display: block; }
@@ -177,71 +184,34 @@
   .timer-controls { display: flex; gap: 6px; }
 
   .timer-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: white;
-    color: #333;
+    padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    background: white; color: #333;
   }
 
   .timer-btn.start { background: #2a9d8f; color: white; border-color: #2a9d8f; }
   .timer-btn.start:hover { background: #21867a; }
   .timer-btn.pause { background: #e9c46a; color: #333; border-color: #e9c46a; }
   .timer-btn.reset { background: white; color: #666; }
-  .timer-btn.reset:hover { background: #f0f0f0; }
-
   .timer-presets { display: flex; gap: 6px; align-items: center; margin-left: auto; flex-wrap: wrap; }
 
   .preset-btn {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    background: #f0f0f0;
-    color: #555;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.15s;
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    background: #f0f0f0; color: #555; cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
   }
 
   .preset-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
 
   .timer-progress { width: 100%; height: 3px; background: #eee; border-radius: 2px; overflow: hidden; margin-top: 4px; }
-
   .timer-progress-fill { height: 100%; background: #2a9d8f; border-radius: 2px; transition: width 1s linear, background 0.3s; }
   .timer-progress-fill.warning { background: #e63946; }
 
   /* ── Controls ── */
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
 
-  select, button {
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
+  select, button { padding: 8px 14px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; }
   select { background: white; }
-
-  button {
-    background: #1a1a2e;
-    color: white;
-    border-color: #1a1a2e;
-    font-weight: 600;
-    transition: background 0.2s;
-  }
-
+  button { background: #1a1a2e; color: white; border-color: #1a1a2e; font-weight: 600; transition: background 0.2s; }
   button:hover { background: #e63946; border-color: #e63946; }
   button.secondary { background: white; color: #1a1a2e; border-color: #ccc; }
   button.secondary:hover { background: #f0f0f0; }
@@ -251,30 +221,17 @@
   .topik-limits { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
   .limit-tag {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    background: #f0f0f0;
-    color: #555;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.15s;
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    background: #f0f0f0; color: #555; cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
   }
 
   .limit-tag.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
 
   /* ── Stats ── */
   .stats-bar {
-    display: flex;
-    gap: 20px;
-    background: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    flex-wrap: wrap;
-    align-items: center;
+    display: flex; gap: 20px; background: white; padding: 10px 16px;
+    border-radius: 8px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    flex-wrap: wrap; align-items: center;
   }
 
   .stat { display: flex; flex-direction: column; align-items: center; }
@@ -283,43 +240,63 @@
   .stat-value.good { color: #2a9d8f; }
   .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 2px; }
   .stat-divider { width: 1px; background: #eee; align-self: stretch; }
-
   .progress-bar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; flex: 1; min-width: 100px; }
   .progress-fill { height: 100%; background: #2a9d8f; border-radius: 3px; transition: width 0.2s; }
   .progress-fill.over { background: #e63946; }
 
+  /* ── Mobile input ── */
+  .mobile-input-box {
+    background: white; border-radius: 8px; padding: 16px;
+    margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: none;
+  }
+
+  .mobile-input-box.show { display: block; }
+
+  .mobile-input-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #888; margin-bottom: 8px;
+  }
+
+  .mobile-textarea {
+    width: 100%; min-height: 120px; padding: 12px;
+    border: 2px solid #ddd; border-radius: 8px; font-size: 18px;
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    line-height: 1.6; resize: vertical; outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .mobile-textarea:focus { border-color: #3b82f6; }
+
+  .mobile-input-hint {
+    font-size: 11px; color: #aaa; margin-top: 6px;
+  }
+
   /* ── Grid ── */
   .wongoji-wrapper {
-    background: white;
-    padding: 20px 20px 20px 44px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    overflow-x: auto;
+    background: white; padding: 20px 20px 20px 44px;
+    border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto;
   }
 
   .wongoji-grid {
     display: grid;
     grid-template-columns: repeat(20, 36px);
-    gap: 0;
-    border: 2px solid #2c2c2c;
-    width: fit-content;
-    margin: 0 auto;
+    gap: 0; border: 2px solid #2c2c2c; width: fit-content; margin: 0 auto;
+  }
+
+  /* Mobile grid - smaller cells */
+  @media (max-width: 768px) {
+    .wongoji-wrapper { padding: 16px 16px 16px 32px; }
+    .wongoji-grid { grid-template-columns: repeat(20, 26px); }
+    .cell { width: 26px !important; height: 26px !important; font-size: 11px !important; }
+    .cell.row-start::before { left: -20px; font-size: 8px; width: 16px; }
   }
 
   .cell {
-    width: 36px; height: 36px;
-    border: 1px solid #bbb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-    position: relative;
-    cursor: text;
-    background: white;
-    transition: background 0.1s;
-    user-select: none;
-    overflow: hidden;
+    width: 36px; height: 36px; border: 1px solid #bbb;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    position: relative; cursor: text; background: white;
+    transition: background 0.1s; user-select: none; overflow: hidden;
   }
 
   .cell.num { font-size: 11px; letter-spacing: -1px; }
@@ -330,47 +307,51 @@
   .cell.num-pending { background: #fef9c3; }
 
   .cell.row-start::before {
-    content: attr(data-row);
-    position: absolute;
-    left: -28px;
-    font-size: 9px;
-    color: #bbb;
-    width: 24px;
-    text-align: right;
+    content: attr(data-row); position: absolute; left: -28px;
+    font-size: 9px; color: #bbb; width: 24px; text-align: right;
     font-family: 'Segoe UI', sans-serif;
   }
 
   .hidden-input { position: fixed; opacity: 0; width: 1px; height: 1px; top: 0; left: 0; pointer-events: none; }
 
-  /* ── Export panel ── */
-  .export-panel {
-    margin-top: 16px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    overflow: hidden;
+  /* ── Q51/52 section ── */
+  .short-answer-box {
+    background: white; border-radius: 8px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px;
   }
 
+  .short-answer-box h3 { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .short-answer-box p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 12px; }
+
+  .short-answer-prompt {
+    background: #f5f0e8; border-left: 4px solid #e63946;
+    padding: 12px 16px; border-radius: 0 6px 6px 0;
+    font-size: 14px; line-height: 1.7; color: #333; margin-bottom: 16px;
+  }
+
+  .answer-line {
+    border: none; border-bottom: 2px solid #ddd; width: 100%;
+    padding: 8px 4px; font-size: 16px;
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    outline: none; background: transparent; margin-bottom: 12px; display: block;
+    transition: border-color 0.2s;
+  }
+
+  .answer-line:focus { border-bottom-color: #3b82f6; }
+  .answer-line-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+
+  /* ── Export ── */
+  .export-panel { margin-top: 16px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+
   .export-toggle {
-    width: 100%;
-    text-align: left;
-    padding: 14px 20px;
-    background: #2a9d8f;
-    color: white;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%; text-align: left; padding: 14px 20px; background: #2a9d8f;
+    color: white; border: none; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
   }
 
   .export-content { padding: 16px 20px; display: none; }
   .export-content.open { display: block; }
-
   .export-options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-
   .export-note { font-size: 12px; color: #888; margin-top: 8px; }
 
   /* ── Messages ── */
@@ -380,27 +361,12 @@
   .success-msg { background: #d1fae5; color: #065f46; padding: 8px 12px; border-radius: 6px; font-size: 12px; }
 
   /* ── Rules ── */
-  .rules-panel {
-    margin-top: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    overflow: hidden;
-  }
+  .rules-panel { margin-top: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
 
   .rules-toggle {
-    width: 100%;
-    text-align: left;
-    padding: 14px 20px;
-    background: #1a1a2e;
-    color: white;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%; text-align: left; padding: 14px 20px; background: #1a1a2e;
+    color: white; border: none; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
   }
 
   .rules-content { padding: 16px 20px; display: none; }
@@ -408,44 +374,21 @@
   .rule { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
 
   .rule-num {
-    background: #e63946;
-    color: white;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
+    background: #e63946; color: white; width: 22px; height: 22px; border-radius: 50%;
+    font-size: 11px; font-weight: 700; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; margin-top: 1px;
   }
 
   .rule-text { font-size: 13px; line-height: 1.5; color: #444; }
   .rule-text strong { color: #1a1a2e; }
 
   /* ── Streak modal ── */
-  .streak-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    display: none;
-  }
-
+  .streak-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 999; }
   .streak-modal.show { display: flex; }
 
   .streak-modal-box {
-    background: white;
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    max-width: 300px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    background: white; border-radius: 16px; padding: 32px; text-align: center;
+    max-width: 300px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   }
 
   .streak-modal-fire { font-size: 64px; margin-bottom: 8px; }
@@ -465,9 +408,14 @@
     <div class="streak-modal-fire">🔥</div>
     <div class="streak-modal-count" id="modalStreakCount">1</div>
     <div class="streak-modal-label">Day Streak!</div>
-    <div class="streak-modal-msg" id="modalStreakMsg">Great job practicing today. Come back tomorrow to keep your streak alive!</div>
+    <div class="streak-modal-msg" id="modalStreakMsg"></div>
     <button class="streak-modal-close" onclick="closeStreakModal()">계속 연습! Keep going!</button>
   </div>
+</div>
+
+<!-- Mobile banner -->
+<div class="mobile-banner" id="mobileBanner">
+  📱 Mobile mode — type in the box below and watch the grid fill in!
 </div>
 
 <header>
@@ -478,127 +426,178 @@
       <span class="streak-count" id="streakCount">0</span>
       <span class="streak-label">day streak</span>
     </div>
-    <span>Beta v0.5</span>
+    <span class="version">Beta v0.6</span>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- Prompt -->
-  <div class="prompt-box">
-    <div class="prompt-header">
-      <div class="prompt-label">📝 TOPIK Prompt (Korean — 원문)</div>
-      <div class="prompt-meta">
-        <div class="prompt-nav">
-          <button class="nav-btn" id="prevBtn" onclick="prevPrompt()" title="Previous prompt">◀</button>
-          <span class="prompt-counter" id="promptCounter">1 / 5</span>
-          <button class="nav-btn" id="nextBtn" onclick="nextPrompt()" title="Next prompt">▶</button>
-        </div>
-        <div class="lang-row">
-          <span>Translate prompt to:</span>
-          <select class="lang-select" id="langSelect" onchange="handleLangChange()">
-            <option value="">— None —</option>
-            <option value="en">English</option>
-            <option value="zh">中文 (Chinese)</option>
-            <option value="ja">日本語 (Japanese)</option>
-            <option value="vi">Tiếng Việt (Vietnamese)</option>
-            <option value="mn">Монгол (Mongolian)</option>
-            <option value="uz">O'zbek (Uzbek)</option>
-            <option value="ru">Русский (Russian)</option>
-            <option value="es">Español (Spanish)</option>
-          </select>
+  <!-- Mode tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('q53')">Q53 Practice</button>
+    <button class="mode-tab" onclick="switchMode('q54')">Q54 Practice</button>
+    <button class="mode-tab" onclick="switchMode('free')">Free Write</button>
+    <button class="mode-tab" onclick="switchMode('q5152')">Q51 / Q52</button>
+  </div>
+
+  <!-- TOPIK Prompt (Q53/Q54) -->
+  <div id="promptSection">
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <div class="prompt-label">📝 TOPIK Prompt (Korean — 원문)</div>
+        <div class="prompt-meta">
+          <div class="prompt-nav">
+            <button class="nav-btn" id="prevBtn" onclick="prevPrompt()">◀</button>
+            <span class="prompt-counter" id="promptCounter">1 / 5</span>
+            <button class="nav-btn" id="nextBtn" onclick="nextPrompt()">▶</button>
+          </div>
+          <div class="lang-row">
+            <span>Translate prompt to:</span>
+            <select class="lang-select" id="langSelect" onchange="handleLangChange()">
+              <option value="">— None —</option>
+              <option value="en">English</option>
+              <option value="zh">中文 (Chinese)</option>
+              <option value="ja">日本語 (Japanese)</option>
+              <option value="vi">Tiếng Việt (Vietnamese)</option>
+              <option value="mn">Монгол (Mongolian)</option>
+              <option value="uz">O'zbek (Uzbek)</option>
+              <option value="ru">Русский (Russian)</option>
+              <option value="es">Español (Spanish)</option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="prompt-korean" id="promptText"></div>
-    <div class="translation-box" id="translationBox">
-      <div class="tl-label" id="tlLabel"></div>
-      <div id="tlText"></div>
-    </div>
-  </div>
-
-  <!-- Controls -->
-  <div class="controls">
-    <select id="levelSelect" onchange="changeLevel()">
-      <option value="3" selected>Level 3–4 (Q53)</option>
-      <option value="5">Level 5–6 (Q54)</option>
-    </select>
-    <button class="secondary" onclick="clearGrid()">Clear Essay</button>
-    <div class="topik-limits">
-      <span style="font-size:12px;color:#888;">Target:</span>
-      <div class="limit-tag active" data-min="150" data-max="300" onclick="setTarget(this)">Q53: 150–300자</div>
-      <div class="limit-tag" data-min="600" data-max="700" onclick="setTarget(this)">Q54: 600–700자</div>
-    </div>
-  </div>
-
-  <!-- Timer -->
-  <div class="timer-bar">
-    <div class="timer-label">⏱ Timer</div>
-    <div class="timer-display" id="timerDisplay">20:00</div>
-    <div class="jpm-display" id="jpmDisplay">자/min: <span id="jpmValue">—</span></div>
-    <div class="timer-controls">
-      <button class="timer-btn start" id="timerStartBtn" onclick="startTimer()">Start</button>
-      <button class="timer-btn pause" id="timerPauseBtn" onclick="pauseTimer()" style="display:none">Pause</button>
-      <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
-    </div>
-    <div class="timer-presets">
-      <span style="font-size:11px;color:#aaa;">Preset:</span>
-      <div class="preset-btn active" data-seconds="1200" onclick="setTimerPreset(this)">Q53 — 20 min</div>
-      <div class="preset-btn" data-seconds="3000" onclick="setTimerPreset(this)">Q54 — 50 min</div>
-      <div class="preset-btn" data-seconds="600" onclick="setTimerPreset(this)">Quick — 10 min</div>
-    </div>
-    <div class="timer-progress" style="flex-basis:100%">
-      <div class="timer-progress-fill" id="timerFill" style="width:100%"></div>
-    </div>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-value" id="charCount">0</div>
-      <div class="stat-label">자 Written</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <div class="stat-value" id="remaining">300</div>
-      <div class="stat-label">Remaining</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <div class="stat-value" id="targetDisplay">150–300</div>
-      <div class="stat-label">Target 자</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <div class="stat-value" id="statusDisplay">시작!</div>
-      <div class="stat-label">Status</div>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <div class="error-log" id="errorLog"></div>
-
-  <!-- Grid -->
-  <div class="wongoji-wrapper">
-    <div class="wongoji-grid" id="wongoji"></div>
-  </div>
-
-  <input type="text" class="hidden-input" id="hiddenInput"
-    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-
-  <!-- Export -->
-  <div class="export-panel">
-    <button class="export-toggle" onclick="toggleExport()">
-      📤 Export & Share Your Essay <span id="exportArrow">▼</span>
-    </button>
-    <div class="export-content" id="exportContent">
-      <div class="export-options">
-        <button class="export-btn" onclick="exportPNG()">📷 Download as Image</button>
-        <button class="secondary" onclick="copyText()">📋 Copy Plain Text</button>
+      <div class="prompt-korean" id="promptText"></div>
+      <div class="translation-box" id="translationBox">
+        <div class="tl-label" id="tlLabel"></div>
+        <div id="tlText"></div>
       </div>
-      <div class="export-note">💡 Share your image on Reddit, Discord, or KakaoTalk — great for getting feedback from other TOPIK learners!</div>
+    </div>
+  </div>
+
+  <!-- Free write header -->
+  <div id="freeWriteSection" style="display:none">
+    <div class="free-write-header">
+      <h2>✍️ Free Write Mode</h2>
+      <p>No prompt, no limits — just write freely in Korean. Use for journaling, essay practice, or any topic you choose.</p>
+    </div>
+  </div>
+
+  <!-- Q51/52 section -->
+  <div id="q5152Section" style="display:none">
+    <div class="short-answer-box">
+      <h3>Q51 — Fill in the Blanks (빈칸 채우기)</h3>
+      <p>Read the passage and write appropriate sentences for each blank. Each answer should be 1–2 sentences.</p>
+      <div class="short-answer-prompt" id="q51prompt"></div>
+      <div class="answer-line-label">① Answer:</div>
+      <input type="text" class="answer-line" id="q51answer1" placeholder="첫 번째 빈칸에 들어갈 내용을 쓰세요...">
+      <div class="answer-line-label">② Answer:</div>
+      <input type="text" class="answer-line" id="q51answer2" placeholder="두 번째 빈칸에 들어갈 내용을 쓰세요...">
+    </div>
+
+    <div class="short-answer-box">
+      <h3>Q52 — Sentence Rewriting (문장 고쳐 쓰기)</h3>
+      <p>Rewrite the sentence in formal written Korean (문어체). Change informal/spoken style to formal essay style.</p>
+      <div class="short-answer-prompt" id="q52prompt"></div>
+      <div class="answer-line-label">Your rewritten sentence:</div>
+      <input type="text" class="answer-line" id="q52answer" placeholder="문어체로 고쳐 쓰세요...">
+    </div>
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <button onclick="newQ5152Prompt()">New Q51/52 Prompts</button>
+    </div>
+  </div>
+
+  <!-- Controls (hidden for Q51/52) -->
+  <div id="gridControls">
+    <div class="controls">
+      <button class="secondary" onclick="clearGrid()">Clear Essay</button>
+      <div class="topik-limits" id="targetLimits">
+        <span style="font-size:12px;color:#888;">Target:</span>
+        <div class="limit-tag active" id="q53tag" data-min="150" data-max="300" onclick="setTarget(this)">Q53: 150–300자</div>
+        <div class="limit-tag" id="q54tag" data-min="600" data-max="700" onclick="setTarget(this)">Q54: 600–700자</div>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-bar">
+      <div class="timer-label">⏱ Timer</div>
+      <div class="timer-display" id="timerDisplay">20:00</div>
+      <div class="jpm-display" id="jpmDisplay">자/min: <span id="jpmValue">—</span></div>
+      <div class="timer-controls">
+        <button class="timer-btn start" id="timerStartBtn" onclick="startTimer()">Start</button>
+        <button class="timer-btn pause" id="timerPauseBtn" onclick="pauseTimer()" style="display:none">Pause</button>
+        <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
+      </div>
+      <div class="timer-presets">
+        <span style="font-size:11px;color:#aaa;">Preset:</span>
+        <div class="preset-btn active" data-seconds="1200" onclick="setTimerPreset(this)">Q53 — 20 min</div>
+        <div class="preset-btn" data-seconds="3000" onclick="setTimerPreset(this)">Q54 — 50 min</div>
+        <div class="preset-btn" data-seconds="600" onclick="setTimerPreset(this)">Quick — 10 min</div>
+      </div>
+      <div class="timer-progress" style="flex-basis:100%">
+        <div class="timer-progress-fill" id="timerFill" style="width:100%"></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value" id="charCount">0</div>
+        <div class="stat-label">자 Written</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value" id="remaining">300</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value" id="targetDisplay">150–300</div>
+        <div class="stat-label">Target 자</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value" id="statusDisplay">시작!</div>
+        <div class="stat-label">Status</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="error-log" id="errorLog"></div>
+
+    <!-- Mobile input box -->
+    <div class="mobile-input-box" id="mobileInputBox">
+      <div class="mobile-input-label">✏️ Type here (Korean keyboard)</div>
+      <textarea class="mobile-textarea" id="mobileTextarea"
+        placeholder="여기에 한국어로 쓰세요..."
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+      ></textarea>
+      <div class="mobile-input-hint">Characters will appear in the grid below as you type.</div>
+    </div>
+
+    <!-- Grid -->
+    <div class="wongoji-wrapper">
+      <div class="wongoji-grid" id="wongoji"></div>
+    </div>
+
+    <input type="text" class="hidden-input" id="hiddenInput"
+      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <!-- Export -->
+    <div class="export-panel">
+      <button class="export-toggle" onclick="toggleExport()">
+        📤 Export & Share Your Essay <span id="exportArrow">▼</span>
+      </button>
+      <div class="export-content" id="exportContent">
+        <div class="export-options">
+          <button class="export-btn" onclick="exportPNG()">📷 Download as Image</button>
+          <button class="secondary" onclick="copyText()">📋 Copy Plain Text</button>
+        </div>
+        <div class="export-note">💡 Share your image on Reddit r/Korean, Discord, or KakaoTalk for feedback from other learners!</div>
+      </div>
     </div>
   </div>
 
@@ -611,8 +610,8 @@
       <div class="rule"><div class="rule-num">1</div><div class="rule-text"><strong>One character per box.</strong> Each complete Hangul syllable block occupies exactly one cell.</div></div>
       <div class="rule"><div class="rule-num">2</div><div class="rule-text"><strong>Spaces count as 자.</strong> One empty box per space. Spaces ARE counted in your total 자.</div></div>
       <div class="rule"><div class="rule-num">3</div><div class="rule-text"><strong>Paragraph indent.</strong> Leave the first box of each paragraph empty. Press Enter to auto-indent.</div></div>
-      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation.</strong> One mark per box. <strong>No punctuation at the start of a line</strong> — write it in the last box of the previous line instead.</div></div>
-      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers: 2 digits per box.</strong> "20" fits in one box. Type both digits and they auto-pair. A single digit gets its own box.</div></div>
+      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation.</strong> One mark per box. <strong>No punctuation at the start of a line</strong> — the app will automatically move it to the last box of the previous line.</div></div>
+      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers: 2 digits per box.</strong> Pair digits left to right: <strong>20 → [20]</strong>, <strong>365 → [36][5]</strong>, <strong>2012 → [20][12]</strong>. In essays, numbers over 99 are usually written in Korean words (삼백육십오) instead. Percentages and ages stay as digits: 50%, 20대.</div></div>
       <div class="rule"><div class="rule-num">6</div><div class="rule-text"><strong>Character limits.</strong> Q53: 150–300자 (–5pts per 100자 over/under). Q54: 600–700자. Stay within range!</div></div>
       <div class="rule"><div class="rule-num">7</div><div class="rule-text"><strong>No title.</strong> Begin your essay directly — no title line.</div></div>
     </div>
@@ -620,110 +619,76 @@
 
 </div>
 
-<footer>wongoji.com · TOPIK II Writing Practice · Beta v0.5</footer>
-
-<!-- Canvas for PNG export (hidden) -->
+<footer>wongoji.com · Korean Writing Practice · Beta v0.6</footer>
 <canvas id="exportCanvas" style="display:none"></canvas>
 
 <script>
 const COLS = 20;
 const PUNCTUATION = ['.', ',', '!', '?', '！', '？', '；', ';', '：', ':', '。', '，'];
-const LANG_NAMES = {
-  en: 'English', zh: '中文', ja: '日本語',
-  vi: 'Tiếng Việt', mn: 'Монгол', uz: "O'zbek",
-  ru: 'Русский', es: 'Español'
-};
+const LANG_NAMES = { en:'English', zh:'中文', ja:'日本語', vi:'Tiếng Việt', mn:'Монгол', uz:"O'zbek", ru:'Русский', es:'Español' };
+const MYMEMORY_CODES = { en:'en', zh:'zh-CN', ja:'ja', vi:'vi', mn:'mn', uz:'uz', ru:'ru', es:'es' };
 
 let ROWS = 16, TOTAL = COLS * ROWS;
 let cells = [], content = [];
 let activeCellIndex = 0;
 let currentLevel = 3, targetMin = 150, targetMax = 300;
+let currentMode = 'q53';
 let promptIndex = { 3: 0, 5: 0 };
 let isComposing = false;
 let numPending = false, numFirst = '', numCell = -1;
-let currentLang = '';
-const tlCache = {};
+let currentLang = '', tlCache = {};
+let isMobile = false;
+let timerTotal = 1200, timerLeft = 1200, timerRunning = false, timerInterval = null, timerElapsed = 0;
+let sessionMarked = false;
 
-// ── Timer ─────────────────────────────────────────────────────
-let timerTotal = 1200, timerLeft = 1200;
-let timerRunning = false, timerInterval = null;
-let timerElapsed = 0; // seconds since start (for 자/min)
-
-// ── Streak ────────────────────────────────────────────────────
-function getTodayStr() {
-  return new Date().toISOString().slice(0, 10);
+// ── Mobile detection ──────────────────────────────────────────
+function detectMobile() {
+  isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)
+    || window.innerWidth < 768;
+  if (isMobile) {
+    document.getElementById('mobileBanner').classList.add('show');
+    document.getElementById('mobileInputBox').classList.add('show');
+    document.getElementById('hiddenInput').style.display = 'none';
+  }
 }
 
-function loadStreak() {
-  try {
-    const last = localStorage.getItem('wongoji_last_practice');
-    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
-    const today = getTodayStr();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+// ── Mobile textarea handler ───────────────────────────────────
+function setupMobileInput() {
+  const ta = document.getElementById('mobileTextarea');
+  ta.addEventListener('input', () => {
+    const text = ta.value;
+    // Rebuild content from textarea
+    content = Array(TOTAL).fill('');
+    let cellIdx = 1; // start at 1 (cell 0 is indent)
+    content[0] = ' '; // first cell indent
 
-    if (last === today) return streak;
-    if (last === yesterday) return streak; // still active, just hasn't practiced yet today
-    return 0; // streak broken
-  } catch { return 0; }
-}
-
-function saveStreak() {
-  try {
-    const last = localStorage.getItem('wongoji_last_practice');
-    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
-    const today = getTodayStr();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-
-    if (last === today) return streak; // already saved today
-
-    let newStreak;
-    if (last === yesterday) {
-      newStreak = streak + 1; // continued streak
-    } else {
-      newStreak = 1; // new streak
+    for (let i = 0; i < text.length && cellIdx < TOTAL; i++) {
+      const ch = text[i];
+      if (ch === '\n') {
+        // New paragraph — indent
+        const nextRowStart = Math.ceil(cellIdx / COLS) * COLS;
+        if (nextRowStart < TOTAL) {
+          content[nextRowStart] = ' ';
+          cellIdx = nextRowStart + 1;
+        }
+      } else {
+        content[cellIdx] = ch;
+        cellIdx++;
+      }
     }
 
-    localStorage.setItem('wongoji_streak', newStreak);
-    localStorage.setItem('wongoji_last_practice', today);
-    return newStreak;
-  } catch { return 1; }
-}
+    // Re-render all cells
+    cells.forEach((cell, i) => {
+      cell.textContent = content[i] || '';
+      cell.classList.remove('error', 'num', 'active', 'indent', 'num-pending');
+      if (i % COLS === 0) { cell.classList.add('row-start'); cell.dataset.row = Math.floor(i/COLS)+1; }
+      if (content[i] === ' ' && i % COLS === 0) cell.classList.add('indent');
+      if (content[i] && /^\d{2}$/.test(content[i])) cell.classList.add('num');
+    });
 
-function updateStreakDisplay(count) {
-  document.getElementById('streakCount').textContent = count;
-}
-
-function showStreakModal(count) {
-  document.getElementById('modalStreakCount').textContent = count;
-  const msgs = [
-    "Great job practicing today. Come back tomorrow to keep your streak alive!",
-    "Two days in a row! Consistency is the key to passing TOPIK 쓰기.",
-    "Three days strong! Your 자/min is improving with every session.",
-    "Four days! Most TOPIK learners give up here. You didn't.",
-    "Five days! You're building a real habit now.",
-    "One week streak! 대단해요! Share your progress on Reddit r/Korean!",
-  ];
-  const msg = count >= 7 ? `${count} days! 정말 대단합니다! Keep going!`
-    : msgs[Math.min(count - 1, msgs.length - 1)];
-  document.getElementById('modalStreakMsg').textContent = msg;
-  document.getElementById('streakModal').classList.add('show');
-}
-
-function closeStreakModal() {
-  document.getElementById('streakModal').classList.remove('show');
-}
-
-// Mark session complete when user writes at least 50자
-let sessionMarked = false;
-function checkSessionComplete() {
-  if (sessionMarked) return;
-  const written = content.filter(c => c !== '').length;
-  if (written >= 50) {
-    sessionMarked = true;
-    const newStreak = saveStreak();
-    updateStreakDisplay(newStreak);
-    showStreakModal(newStreak);
-  }
+    updateStats();
+    checkSessionComplete();
+  });
 }
 
 // ── Prompts ───────────────────────────────────────────────────
@@ -744,26 +709,131 @@ const prompts = {
   ]
 };
 
-// ── Timer ─────────────────────────────────────────────────────
-function formatTime(s) {
-  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+const q5152Prompts = [
+  {
+    q51: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오.\n\n사람들은 흔히 행복이 큰 성공에서 온다고 생각한다. 그러나 연구에 따르면 ( ㉠ ). 오히려 작은 일상의 즐거움이 지속적인 행복감을 만들어낸다. 따라서 행복하게 살기 위해서는 ( ㉡ ).",
+    q52: "다음 문장을 문어체로 바꿔 쓰시오.\n\n「요즘 사람들이 책을 잘 안 읽는 것 같아. 스마트폰이 생긴 다음부터 그런 것 같은데.」"
+  },
+  {
+    q51: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오.\n\n현대 사회에서 환경 문제가 심각해지고 있다. 전문가들은 이 문제의 주요 원인이 ( ㉠ )고 말한다. 이를 해결하기 위해 각국 정부는 ( ㉡ ).",
+    q52: "다음 문장을 문어체로 바꿔 쓰시오.\n\n「운동을 꾸준히 하면 건강에 좋은 거 다 알잖아. 그런데 왜 이렇게 하기 싫은 건지 모르겠어.」"
+  }
+];
+
+let q5152Index = 0;
+
+function loadQ5152() {
+  const p = q5152Prompts[q5152Index];
+  document.getElementById('q51prompt').innerHTML = p.q51.replace(/\n/g, '<br>');
+  document.getElementById('q52prompt').innerHTML = p.q52.replace(/\n/g, '<br>');
+  document.getElementById('q51answer1').value = '';
+  document.getElementById('q51answer2').value = '';
+  document.getElementById('q52answer').value = '';
 }
+
+function newQ5152Prompt() {
+  q5152Index = (q5152Index + 1) % q5152Prompts.length;
+  loadQ5152();
+}
+
+// ── Mode switching ────────────────────────────────────────────
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['q53','q54','free','q5152'][i] === mode);
+  });
+
+  document.getElementById('promptSection').style.display = (mode === 'q53' || mode === 'q54') ? '' : 'none';
+  document.getElementById('freeWriteSection').style.display = mode === 'free' ? '' : 'none';
+  document.getElementById('q5152Section').style.display = mode === 'q5152' ? '' : 'none';
+  document.getElementById('gridControls').style.display = mode === 'q5152' ? 'none' : '';
+
+  if (mode === 'q53') {
+    currentLevel = 3;
+    setTarget(document.querySelector('[data-min="150"]'));
+    showPrompt();
+  } else if (mode === 'q54') {
+    currentLevel = 5;
+    setTarget(document.querySelector('[data-min="600"]'));
+    showPrompt();
+  } else if (mode === 'free') {
+    // Free write — counter but no target enforced
+    targetMin = 0; targetMax = 99999;
+    document.getElementById('targetDisplay').textContent = '∞';
+    document.getElementById('remaining').textContent = '∞';
+    document.getElementById('targetLimits').style.display = 'none';
+    ROWS = 40; TOTAL = COLS * ROWS;
+    buildGrid();
+  } else if (mode === 'q5152') {
+    loadQ5152();
+  }
+}
+
+// ── Streak ────────────────────────────────────────────────────
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+
+function loadStreak() {
+  try {
+    const last = localStorage.getItem('wongoji_last_practice');
+    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (last === getTodayStr() || last === yesterday) return streak;
+    return 0;
+  } catch { return 0; }
+}
+
+function saveStreak() {
+  try {
+    const last = localStorage.getItem('wongoji_last_practice');
+    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
+    const today = getTodayStr();
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (last === today) return streak;
+    const newStreak = last === yesterday ? streak + 1 : 1;
+    localStorage.setItem('wongoji_streak', newStreak);
+    localStorage.setItem('wongoji_last_practice', today);
+    return newStreak;
+  } catch { return 1; }
+}
+
+function updateStreakDisplay(count) { document.getElementById('streakCount').textContent = count; }
+
+function showStreakModal(count) {
+  document.getElementById('modalStreakCount').textContent = count;
+  const msgs = ["Great job practicing today. Come back tomorrow to keep your streak alive!", "Two days in a row! Consistency is the key to passing TOPIK 쓰기.", "Three days strong! Your writing is improving.", "Four days! Most learners give up here. You didn't.", "Five days! You're building a real habit.", "One week! Share your progress on Reddit r/Korean!"];
+  document.getElementById('modalStreakMsg').textContent = count >= 7 ? `${count} days! 정말 대단합니다!` : msgs[Math.min(count-1, msgs.length-1)];
+  document.getElementById('streakModal').classList.add('show');
+}
+
+function closeStreakModal() { document.getElementById('streakModal').classList.remove('show'); }
+
+function checkSessionComplete() {
+  if (sessionMarked) return;
+  const written = content.filter(c => c !== '').length;
+  if (written >= 50) {
+    sessionMarked = true;
+    const s = saveStreak();
+    updateStreakDisplay(s);
+    showStreakModal(s);
+  }
+}
+
+// ── Timer ─────────────────────────────────────────────────────
+function formatTime(s) { return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
 
 function updateTimerDisplay() {
   const el = document.getElementById('timerDisplay');
   const fill = document.getElementById('timerFill');
   el.textContent = formatTime(timerLeft);
-  const pct = (timerLeft / timerTotal) * 100;
-  fill.style.width = pct + '%';
-  el.className = 'timer-display' + (timerLeft === 0 ? ' done' : timerLeft <= timerTotal * 0.2 ? ' warning' : '');
-  fill.className = 'timer-progress-fill' + (timerLeft <= timerTotal * 0.2 ? ' warning' : '');
+  fill.style.width = (timerLeft/timerTotal*100) + '%';
+  el.className = 'timer-display' + (timerLeft===0?' done':timerLeft<=timerTotal*0.2?' warning':'');
+  fill.className = 'timer-progress-fill' + (timerLeft<=timerTotal*0.2?' warning':'');
 }
 
 function updateJPM() {
   if (!timerRunning || timerElapsed < 10) return;
   const written = content.filter(c => c !== '').length;
-  const jpm = Math.round((written / timerElapsed) * 60);
-  document.getElementById('jpmValue').textContent = jpm;
+  document.getElementById('jpmValue').textContent = Math.round((written/timerElapsed)*60);
   document.getElementById('jpmDisplay').classList.add('show');
 }
 
@@ -772,35 +842,20 @@ function startTimer() {
   timerRunning = true;
   document.getElementById('timerStartBtn').style.display = 'none';
   document.getElementById('timerPauseBtn').style.display = '';
-
   timerInterval = setInterval(() => {
-    if (timerLeft <= 0) {
-      clearInterval(timerInterval);
-      timerRunning = false;
-      document.getElementById('timerStartBtn').style.display = '';
-      document.getElementById('timerPauseBtn').style.display = 'none';
-      updateTimerDisplay();
-      return;
-    }
-    timerLeft--;
-    timerElapsed++;
-    updateTimerDisplay();
-    updateJPM();
+    if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning=false; document.getElementById('timerStartBtn').style.display=''; document.getElementById('timerPauseBtn').style.display='none'; updateTimerDisplay(); return; }
+    timerLeft--; timerElapsed++; updateTimerDisplay(); updateJPM();
   }, 1000);
 }
 
 function pauseTimer() {
-  clearInterval(timerInterval);
-  timerRunning = false;
+  clearInterval(timerInterval); timerRunning = false;
   document.getElementById('timerStartBtn').style.display = '';
   document.getElementById('timerPauseBtn').style.display = 'none';
 }
 
 function resetTimer() {
-  clearInterval(timerInterval);
-  timerRunning = false;
-  timerLeft = timerTotal;
-  timerElapsed = 0;
+  clearInterval(timerInterval); timerRunning = false; timerLeft = timerTotal; timerElapsed = 0;
   document.getElementById('timerStartBtn').style.display = '';
   document.getElementById('timerPauseBtn').style.display = 'none';
   document.getElementById('jpmDisplay').classList.remove('show');
@@ -808,143 +863,22 @@ function resetTimer() {
 }
 
 function setTimerPreset(el) {
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  pauseTimer();
-  timerTotal = parseInt(el.dataset.seconds);
-  timerLeft = timerTotal;
-  timerElapsed = 0;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); pauseTimer();
+  timerTotal = parseInt(el.dataset.seconds); timerLeft = timerTotal; timerElapsed = 0;
   document.getElementById('jpmDisplay').classList.remove('show');
   updateTimerDisplay();
 }
 
-// ── Export ────────────────────────────────────────────────────
-function exportPNG() {
-  const written = content.filter(c => c !== '').length;
-  if (written < 5) {
-    showMsg('info', '💡 Write something first before exporting!');
-    return;
-  }
-
-  const CELL_SIZE = 40;
-  const PADDING = 40;
-  const HEADER_H = 60;
-  const FOOTER_H = 30;
-  const usedRows = Math.max(Math.ceil(written / COLS) + 2, 5);
-  const rows = Math.min(usedRows, ROWS);
-
-  const canvas = document.getElementById('exportCanvas');
-  canvas.width  = COLS * CELL_SIZE + PADDING * 2;
-  canvas.height = rows * CELL_SIZE + PADDING * 2 + HEADER_H + FOOTER_H;
-
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Header
-  ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(0, 0, canvas.width, HEADER_H);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 18px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('원고지 練習 · Wongoji Practice', PADDING, 28);
-  const p = prompts[currentLevel][promptIndex[currentLevel]];
-  ctx.font = '12px sans-serif';
-  ctx.fillStyle = '#aaaaaa';
-  ctx.fillText(`${p.q} · wongoji.com`, PADDING, 48);
-
-  // Grid
-  const startX = PADDING;
-  const startY = HEADER_H + PADDING / 2;
-
-  ctx.strokeStyle = '#bbbbbb';
-  ctx.lineWidth = 1;
-
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < COLS; col++) {
-      const x = startX + col * CELL_SIZE;
-      const y = startY + row * CELL_SIZE;
-      const idx = row * COLS + col;
-      const ch = content[idx] || '';
-
-      // Cell background
-      ctx.fillStyle = ch === ' ' && col === 0 ? '#f5f5f5' : '#ffffff';
-      ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-      ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
-
-      // Character
-      if (ch && ch !== ' ') {
-        ctx.fillStyle = '#2c2c2c';
-        const fontSize = /^\d{2}$/.test(ch) ? 11 : 16;
-        ctx.font = `${fontSize}px 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(ch, x + CELL_SIZE / 2, y + CELL_SIZE / 2);
-      }
-    }
-  }
-
-  // Outer border
-  ctx.strokeStyle = '#2c2c2c';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(startX, startY, COLS * CELL_SIZE, rows * CELL_SIZE);
-
-  // Stats footer
-  const footerY = startY + rows * CELL_SIZE + 12;
-  ctx.fillStyle = '#888888';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-  const charCount = content.filter(c => c !== '').length;
-  ctx.fillText(`${charCount}자 written · Target: ${targetMin}–${targetMax}자 · wongoji.com`, startX, footerY + 10);
-
-  // Download
-  const link = document.createElement('a');
-  link.download = `wongoji_practice_${getTodayStr()}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-
-  showMsg('success', '✅ Image downloaded! Share it on Reddit r/Korean or r/TOPIK for feedback.');
-}
-
-function copyText() {
-  const rows = [];
-  for (let r = 0; r < ROWS; r++) {
-    let row = '';
-    for (let c = 0; c < COLS; c++) {
-      row += content[r * COLS + c] || ' ';
-    }
-    if (row.trim()) rows.push(row);
-  }
-  const text = rows.join('\n');
-  if (!text.trim()) { showMsg('info', '💡 Write something first!'); return; }
-
-  navigator.clipboard.writeText(text).then(() => {
-    showMsg('success', '✅ Text copied to clipboard! Paste it anywhere.');
-  }).catch(() => {
-    showMsg('error', '⚠️ Copy failed — try selecting the text manually.');
-  });
-}
-
 // ── Translation ───────────────────────────────────────────────
-function getCurrentPromptPlain() {
-  return prompts[currentLevel][promptIndex[currentLevel]].plain;
-}
-
-// MyMemory language codes (ko -> target)
-const MYMEMORY_CODES = {
-  en: 'en', zh: 'zh-CN', ja: 'ja',
-  vi: 'vi', mn: 'mn', uz: 'uz',
-  ru: 'ru', es: 'es'
-};
+function getCurrentPromptPlain() { return prompts[currentLevel][promptIndex[currentLevel]].plain; }
 
 async function translatePrompt(lang) {
   const text = getCurrentPromptPlain();
   const key = `${lang}::${text.slice(0,40)}`;
   if (tlCache[key]) { showTranslation(lang, tlCache[key]); return; }
 
-  const box = document.getElementById('translationBox');
-  box.classList.add('show');
+  document.getElementById('translationBox').classList.add('show');
   document.getElementById('tlLabel').textContent = LANG_NAMES[lang] + ' — Prompt translation only';
   document.getElementById('tlText').innerHTML = '<span class="tl-loading">Translating prompt...</span>';
 
@@ -984,50 +918,34 @@ function handleLangChange() {
 // ── Prompt nav ────────────────────────────────────────────────
 function showPrompt() {
   const pool = prompts[currentLevel];
-  const idx  = promptIndex[currentLevel];
-  const p    = pool[idx];
-  document.getElementById('promptText').innerHTML =
-    `<strong>${p.q}</strong><br><br>${p.text.replace(/\n/g, '<br>')}`;
+  const idx = promptIndex[currentLevel];
+  const p = pool[idx];
+  document.getElementById('promptText').innerHTML = `<strong>${p.q}</strong><br><br>${p.text.replace(/\n/g,'<br>')}`;
   document.getElementById('promptCounter').textContent = `${idx+1} / ${pool.length}`;
   document.getElementById('prevBtn').disabled = idx === 0;
-  document.getElementById('nextBtn').disabled = idx === pool.length - 1;
-  if (currentLang) translatePrompt(currentLang);
-  else hideTranslation();
+  document.getElementById('nextBtn').disabled = idx === pool.length-1;
+  if (currentLang) translatePrompt(currentLang); else hideTranslation();
 }
 
-function nextPrompt() {
-  if (promptIndex[currentLevel] < prompts[currentLevel].length - 1) {
-    promptIndex[currentLevel]++;
-    showPrompt();
-  }
-}
-
-function prevPrompt() {
-  if (promptIndex[currentLevel] > 0) {
-    promptIndex[currentLevel]--;
-    showPrompt();
-  }
-}
+function nextPrompt() { if (promptIndex[currentLevel] < prompts[currentLevel].length-1) { promptIndex[currentLevel]++; showPrompt(); } }
+function prevPrompt() { if (promptIndex[currentLevel] > 0) { promptIndex[currentLevel]--; showPrompt(); } }
 
 // ── Grid ──────────────────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('wongoji');
-  grid.innerHTML = '';
-  cells = [];
-  content = Array(TOTAL).fill('');
+  grid.innerHTML = ''; cells = []; content = Array(TOTAL).fill('');
 
   for (let i = 0; i < TOTAL; i++) {
     const cell = document.createElement('div');
-    cell.className = 'cell';
-    cell.dataset.index = i;
+    cell.className = 'cell'; cell.dataset.index = i;
     if (i % COLS === 0) { cell.classList.add('row-start'); cell.dataset.row = Math.floor(i/COLS)+1; }
-    cell.addEventListener('mousedown', (e) => { e.preventDefault(); commitNumPending(); setActiveCell(i); });
-    grid.appendChild(cell);
-    cells.push(cell);
+    cell.addEventListener('mousedown', (e) => { e.preventDefault(); if(!isMobile){commitNumPending(); setActiveCell(i);} });
+    grid.appendChild(cell); cells.push(cell);
   }
 
   content[0] = ' '; cells[0].classList.add('indent'); renderCell(0);
-  setActiveCell(1); updateStats();
+  if (!isMobile) setActiveCell(1);
+  updateStats();
 }
 
 function setActiveCell(idx) {
@@ -1035,191 +953,264 @@ function setActiveCell(idx) {
   cells[activeCellIndex]?.classList.remove('active');
   activeCellIndex = idx;
   cells[activeCellIndex].classList.add('active');
-  cells[activeCellIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  cells[activeCellIndex].scrollIntoView({ block:'nearest', inline:'nearest' });
   const inp = document.getElementById('hiddenInput');
-  inp.value = ''; inp.focus({ preventScroll: true });
+  inp.value = ''; inp.focus({ preventScroll:true });
 }
 
 function renderCell(idx) {
-  const cell = cells[idx];
-  if (!cell) return;
+  const cell = cells[idx]; if (!cell) return;
   const ch = content[idx];
   cell.textContent = ch || '';
-  cell.classList.remove('error', 'num', 'num-pending');
+  cell.classList.remove('error','num','num-pending');
   if (ch && /^\d{2}$/.test(ch)) cell.classList.add('num');
 }
 
 function updateStats() {
-  const written = content.filter(c => c !== '').length;
-  const pct = Math.min((written / targetMax) * 100, 100);
+  const written = content.filter(c=>c!=='').length;
+  const pct = currentMode === 'free' ? Math.min((written/200)*100,100) : Math.min((written/targetMax)*100,100);
   document.getElementById('charCount').textContent = written;
 
+  if (currentMode === 'free') {
+    document.getElementById('remaining').textContent = '∞';
+    document.getElementById('statusDisplay').textContent = written > 0 ? '✓ Writing!' : '시작!';
+    document.getElementById('statusDisplay').className = 'stat-value' + (written > 0 ? ' good' : '');
+    document.getElementById('progressFill').style.width = pct + '%';
+    return;
+  }
+
   const remEl = document.getElementById('remaining');
-  remEl.textContent = Math.max(0, targetMax - written);
-  remEl.className = 'stat-value' + (written > targetMax ? ' warning' : written >= targetMin ? ' good' : '');
+  remEl.textContent = Math.max(0, targetMax-written);
+  remEl.className = 'stat-value' + (written>targetMax?' warning':written>=targetMin?' good':'');
 
   const statusEl = document.getElementById('statusDisplay');
-  const fillEl   = document.getElementById('progressFill');
+  const fillEl = document.getElementById('progressFill');
 
-  if (written === 0) { statusEl.textContent = '시작!'; statusEl.className = 'stat-value'; fillEl.className = 'progress-fill'; }
-  else if (written < targetMin) { statusEl.textContent = `+${targetMin-written}자 more`; statusEl.className = 'stat-value'; fillEl.className = 'progress-fill'; }
-  else if (written <= targetMax) { statusEl.textContent = '✓ In range!'; statusEl.className = 'stat-value good'; fillEl.className = 'progress-fill'; }
-  else { statusEl.textContent = `${written-targetMax}자 over!`; statusEl.className = 'stat-value warning'; fillEl.className = 'progress-fill over'; }
-
+  if (written===0) { statusEl.textContent='시작!'; statusEl.className='stat-value'; fillEl.className='progress-fill'; }
+  else if (written<targetMin) { statusEl.textContent=`+${targetMin-written}자 more`; statusEl.className='stat-value'; fillEl.className='progress-fill'; }
+  else if (written<=targetMax) { statusEl.textContent='✓ In range!'; statusEl.className='stat-value good'; fillEl.className='progress-fill'; }
+  else { statusEl.textContent=`${written-targetMax}자 over!`; statusEl.className='stat-value warning'; fillEl.className='progress-fill over'; }
   fillEl.style.width = pct + '%';
   checkSessionComplete();
 }
 
-function validateCell(idx) {
-  const col = idx % COLS, ch = content[idx];
+// ── Validation with AUTO-FIX for punctuation ─────────────────
+function validateAndFixPunctuation(idx) {
+  const col = idx % COLS;
+  const ch = content[idx];
+
   if (col === 0 && ch && PUNCTUATION.includes(ch)) {
-    cells[idx].classList.add('error');
-    showMsg('error', '⚠️ Rule #4: Punctuation cannot start a new line — move it to the end of the previous line.');
-    return false;
+    // Auto-fix: move punctuation to last cell of previous line
+    const prevLineEnd = idx - 1;
+    if (prevLineEnd >= 0) {
+      // Find the last filled cell in previous row, or use the last cell
+      content[prevLineEnd] = ch;
+      renderCell(prevLineEnd);
+      content[idx] = '';
+      renderCell(idx);
+      showMsg('info', '💡 Punctuation auto-moved to end of previous line (Rule #4).');
+      // Move cursor forward from original position
+      setActiveCell(idx + 1 < TOTAL ? idx + 1 : idx);
+      return true;
+    }
   }
-  clearMsg(); return true;
+  clearMsg();
+  return false;
 }
 
 function showMsg(type, text) {
-  const cls = type === 'error' ? 'error-msg' : type === 'success' ? 'success-msg' : 'info-msg';
+  const cls = type==='error'?'error-msg':type==='success'?'success-msg':'info-msg';
   document.getElementById('errorLog').innerHTML = `<div class="${cls}">${text}</div>`;
 }
 
 function clearMsg() { document.getElementById('errorLog').innerHTML = ''; }
 
+// ── Number pairing ────────────────────────────────────────────
 function isDigit(ch) { return /^\d$/.test(ch); }
 
 function commitNumPending() {
   if (!numPending) return;
   content[numCell] = numFirst; renderCell(numCell);
-  numPending = false; numFirst = ''; numCell = -1;
-  clearMsg(); updateStats();
+  numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats();
 }
 
 function handleDigit(d) {
   if (!numPending) {
-    numPending = true; numFirst = d; numCell = activeCellIndex;
-    cells[numCell].textContent = d; cells[numCell].classList.add('num-pending');
-    showMsg('info', `💡 Rule #5: Type second digit to pair in one box, or Space/Enter to place "${d}" alone.`);
+    numPending=true; numFirst=d; numCell=activeCellIndex;
+    cells[numCell].textContent=d; cells[numCell].classList.add('num-pending');
+    showMsg('info', `💡 Rule #5: Type second digit to pair in one box, or Space/Enter to commit "${d}" alone.`);
   } else {
-    const paired = numFirst + d;
-    content[numCell] = paired; cells[numCell].classList.remove('num-pending'); renderCell(numCell);
-    const next = numCell + 1;
-    numPending = false; numFirst = ''; numCell = -1;
-    clearMsg(); updateStats(); setActiveCell(Math.min(next, TOTAL-1));
+    const paired = numFirst+d;
+    content[numCell]=paired; cells[numCell].classList.remove('num-pending'); renderCell(numCell);
+    const next=numCell+1; numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats();
+    setActiveCell(Math.min(next,TOTAL-1));
   }
 }
 
+// ── Desktop keyboard input ────────────────────────────────────
 const hiddenInput = document.getElementById('hiddenInput');
 
-hiddenInput.addEventListener('compositionstart', () => { isComposing = true; commitNumPending(); });
+hiddenInput.addEventListener('compositionstart', ()=>{ isComposing=true; commitNumPending(); });
 
-hiddenInput.addEventListener('compositionupdate', (e) => {
-  if (cells[activeCellIndex]) { cells[activeCellIndex].textContent = e.data; cells[activeCellIndex].style.color = '#3b82f6'; }
+hiddenInput.addEventListener('compositionupdate', (e)=>{
+  if (cells[activeCellIndex]) { cells[activeCellIndex].textContent=e.data; cells[activeCellIndex].style.color='#3b82f6'; }
 });
 
-hiddenInput.addEventListener('compositionend', (e) => {
-  isComposing = false;
-  if (cells[activeCellIndex]) cells[activeCellIndex].style.color = '';
-  const final = e.data;
+hiddenInput.addEventListener('compositionend', (e)=>{
+  isComposing=false;
+  if (cells[activeCellIndex]) cells[activeCellIndex].style.color='';
+  const final=e.data;
   if (final) {
-    [...final].forEach((ch, i, arr) => {
-      if (activeCellIndex < TOTAL) {
-        content[activeCellIndex] = ch; renderCell(activeCellIndex); validateCell(activeCellIndex);
-        if (i < arr.length-1) activeCellIndex++;
+    [...final].forEach((ch,i,arr)=>{
+      if (activeCellIndex<TOTAL) {
+        content[activeCellIndex]=ch; renderCell(activeCellIndex);
+        validateAndFixPunctuation(activeCellIndex);
+        if (i<arr.length-1) activeCellIndex++;
       }
     });
-    setActiveCell(Math.min(activeCellIndex+1, TOTAL-1));
+    setActiveCell(Math.min(activeCellIndex+1,TOTAL-1));
   }
-  hiddenInput.value = ''; updateStats();
+  hiddenInput.value=''; updateStats();
 });
 
-hiddenInput.addEventListener('keydown', (e) => {
+hiddenInput.addEventListener('keydown', (e)=>{
   if (isComposing) return;
-  if (e.key === 'Backspace') {
+  if (e.key==='Backspace') {
     e.preventDefault();
-    if (numPending) { cells[numCell].textContent = ''; cells[numCell].classList.remove('num-pending'); numPending=false; numFirst=''; numCell=-1; clearMsg(); return; }
+    if (numPending) { cells[numCell].textContent=''; cells[numCell].classList.remove('num-pending'); numPending=false; numFirst=''; numCell=-1; clearMsg(); return; }
     if (content[activeCellIndex]) { content[activeCellIndex]=''; renderCell(activeCellIndex); }
-    else if (activeCellIndex > 0) { setActiveCell(activeCellIndex-1); content[activeCellIndex]=''; renderCell(activeCellIndex); }
+    else if (activeCellIndex>0) { setActiveCell(activeCellIndex-1); content[activeCellIndex]=''; renderCell(activeCellIndex); }
     clearMsg(); updateStats(); return;
   }
-  const nav = { ArrowRight:1, ArrowLeft:-1, ArrowDown:COLS, ArrowUp:-COLS };
-  if (nav[e.key] !== undefined) { e.preventDefault(); commitNumPending(); setActiveCell(activeCellIndex+nav[e.key]); return; }
-  if (e.key === ' ') {
-    e.preventDefault(); commitNumPending();
-    content[activeCellIndex]=' '; renderCell(activeCellIndex); validateCell(activeCellIndex);
+  const nav={ArrowRight:1,ArrowLeft:-1,ArrowDown:COLS,ArrowUp:-COLS};
+  if (nav[e.key]!==undefined) { e.preventDefault(); commitNumPending(); setActiveCell(activeCellIndex+nav[e.key]); return; }
+  if (e.key===' ') {
+    e.preventDefault(); commitNumPending(); content[activeCellIndex]=' '; renderCell(activeCellIndex);
     setActiveCell(Math.min(activeCellIndex+1,TOTAL-1)); updateStats(); return;
   }
-  if (e.key === 'Enter') {
+  if (e.key==='Enter') {
     e.preventDefault(); commitNumPending();
-    const next = (Math.floor(activeCellIndex/COLS)+1)*COLS;
-    if (next < TOTAL) { content[next]=' '; cells[next].classList.add('indent'); renderCell(next); setActiveCell(next+1); }
+    const next=(Math.floor(activeCellIndex/COLS)+1)*COLS;
+    if (next<TOTAL) { content[next]=' '; cells[next].classList.add('indent'); renderCell(next); setActiveCell(next+1); }
     updateStats(); return;
   }
 });
 
-hiddenInput.addEventListener('input', (e) => {
+hiddenInput.addEventListener('input', (e)=>{
   if (isComposing) return;
-  const val = hiddenInput.value; hiddenInput.value = ''; if (!val) return;
+  const val=hiddenInput.value; hiddenInput.value=''; if(!val) return;
   for (const ch of [...val]) {
     if (isDigit(ch)) { handleDigit(ch); }
-    else { commitNumPending(); if (activeCellIndex < TOTAL) { content[activeCellIndex]=ch; renderCell(activeCellIndex); validateCell(activeCellIndex); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1)); } }
+    else {
+      commitNumPending();
+      if (activeCellIndex<TOTAL) {
+        content[activeCellIndex]=ch; renderCell(activeCellIndex);
+        validateAndFixPunctuation(activeCellIndex);
+        setActiveCell(Math.min(activeCellIndex+1,TOTAL-1));
+      }
+    }
   }
   updateStats();
 });
 
+// ── Controls ──────────────────────────────────────────────────
 function clearGrid() {
-  commitNumPending(); sessionMarked = false;
-  content = Array(TOTAL).fill('');
-  cells.forEach((c,i) => { c.textContent=''; c.className='cell'; c.style.color=''; if(i%COLS===0){c.classList.add('row-start');c.dataset.row=Math.floor(i/COLS)+1;} });
-  clearMsg(); content[0]=' '; cells[0].classList.add('indent'); renderCell(0); setActiveCell(1); updateStats();
-}
-
-function changeLevel() {
-  currentLevel = parseInt(document.getElementById('levelSelect').value);
-  promptIndex[currentLevel] = 0; showPrompt();
-  setTarget(currentLevel===3 ? document.querySelector('[data-min="150"]') : document.querySelector('[data-min="600"]'));
+  commitNumPending(); sessionMarked=false;
+  content=Array(TOTAL).fill('');
+  cells.forEach((c,i)=>{ c.textContent=''; c.className='cell'; c.style.color=''; if(i%COLS===0){c.classList.add('row-start');c.dataset.row=Math.floor(i/COLS)+1;} });
+  clearMsg(); content[0]=' '; cells[0].classList.add('indent'); renderCell(0);
+  if (!isMobile) setActiveCell(1);
+  if (isMobile) document.getElementById('mobileTextarea').value='';
+  updateStats();
 }
 
 function setTarget(el) {
+  if (!el) return;
   document.querySelectorAll('.limit-tag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  targetMin = parseInt(el.dataset.min); targetMax = parseInt(el.dataset.max);
-  document.getElementById('targetDisplay').textContent = `${targetMin}–${targetMax}`;
-  document.getElementById('remaining').textContent = targetMax;
-  ROWS = targetMax<=300?16:37; TOTAL=COLS*ROWS; buildGrid();
+  targetMin=parseInt(el.dataset.min); targetMax=parseInt(el.dataset.max);
+  document.getElementById('targetDisplay').textContent=`${targetMin}–${targetMax}`;
+  document.getElementById('remaining').textContent=targetMax;
+  document.getElementById('targetLimits').style.display='';
+  ROWS=targetMax<=300?16:37; TOTAL=COLS*ROWS; buildGrid();
+}
+
+// ── Export ────────────────────────────────────────────────────
+function exportPNG() {
+  const written=content.filter(c=>c!=='').length;
+  if (written<5) { showMsg('info','💡 Write something first before exporting!'); return; }
+  const CELL_SIZE=40, PADDING=40, HEADER_H=60;
+  const usedRows=Math.min(Math.max(Math.ceil(written/COLS)+2,5),ROWS);
+  const canvas=document.getElementById('exportCanvas');
+  canvas.width=COLS*CELL_SIZE+PADDING*2;
+  canvas.height=usedRows*CELL_SIZE+PADDING*2+HEADER_H+30;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#1a1a2e'; ctx.fillRect(0,0,canvas.width,HEADER_H);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 18px sans-serif'; ctx.textAlign='left';
+  ctx.fillText('원고지 練習 · Wongoji Practice',PADDING,28);
+  ctx.font='12px sans-serif'; ctx.fillStyle='#aaaaaa';
+  const modeLabel = currentMode==='free'?'Free Write':prompts[currentLevel][promptIndex[currentLevel]].q;
+  ctx.fillText(`${modeLabel} · wongoji.com`,PADDING,48);
+  const startX=PADDING, startY=HEADER_H+PADDING/2;
+  ctx.strokeStyle='#bbbbbb'; ctx.lineWidth=1;
+  for (let row=0;row<usedRows;row++) {
+    for (let col=0;col<COLS;col++) {
+      const x=startX+col*CELL_SIZE, y=startY+row*CELL_SIZE;
+      const ch=content[row*COLS+col]||'';
+      ctx.fillStyle=ch===' '&&col===0?'#f5f5f5':'#ffffff';
+      ctx.fillRect(x,y,CELL_SIZE,CELL_SIZE); ctx.strokeRect(x,y,CELL_SIZE,CELL_SIZE);
+      if (ch&&ch!==' ') {
+        ctx.fillStyle='#2c2c2c';
+        ctx.font=`${/^\d{2}$/.test(ch)?11:16}px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif`;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(ch,x+CELL_SIZE/2,y+CELL_SIZE/2);
+      }
+    }
+  }
+  ctx.strokeStyle='#2c2c2c'; ctx.lineWidth=2;
+  ctx.strokeRect(startX,startY,COLS*CELL_SIZE,usedRows*CELL_SIZE);
+  ctx.fillStyle='#888'; ctx.font='11px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.fillText(`${written}자 written · wongoji.com`,startX,startY+usedRows*CELL_SIZE+18);
+  const link=document.createElement('a');
+  link.download=`wongoji_${getTodayStr()}.png`; link.href=canvas.toDataURL('image/png'); link.click();
+  showMsg('success','✅ Image downloaded! Share on Reddit r/Korean for feedback.');
+}
+
+function copyText() {
+  const rows=[];
+  for (let r=0;r<ROWS;r++) { let row=''; for(let c=0;c<COLS;c++) row+=content[r*COLS+c]||' '; if(row.trim()) rows.push(row); }
+  const text=rows.join('\n');
+  if (!text.trim()) { showMsg('info','💡 Write something first!'); return; }
+  navigator.clipboard.writeText(text).then(()=>showMsg('success','✅ Copied to clipboard!')).catch(()=>showMsg('error','⚠️ Copy failed.'));
 }
 
 function toggleExport() {
-  const c = document.getElementById('exportContent');
-  const a = document.getElementById('exportArrow');
-  c.classList.toggle('open');
-  a.textContent = c.classList.contains('open') ? '▲' : '▼';
+  const c=document.getElementById('exportContent'), a=document.getElementById('exportArrow');
+  c.classList.toggle('open'); a.textContent=c.classList.contains('open')?'▲':'▼';
 }
 
 function toggleRules() {
-  const c = document.getElementById('rulesContent');
-  const a = document.getElementById('rulesArrow');
-  c.classList.toggle('open');
-  a.textContent = c.classList.contains('open') ? '▲' : '▼';
+  const c=document.getElementById('rulesContent'), a=document.getElementById('rulesArrow');
+  c.classList.toggle('open'); a.textContent=c.classList.contains('open')?'▲':'▼';
 }
 
-function getTodayStr() { return new Date().toISOString().slice(0,10); }
-
 // ── Init ──────────────────────────────────────────────────────
-const initStreak = loadStreak();
-updateStreakDisplay(initStreak);
+detectMobile();
+updateStreakDisplay(loadStreak());
 buildGrid();
 showPrompt();
 updateTimerDisplay();
+setupMobileInput();
 
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.rules-toggle') && !e.target.closest('.export-toggle') &&
-      !e.target.closest('select') && !e.target.closest('button') &&
-      !e.target.closest('.nav-btn') && !e.target.closest('.lang-select') &&
-      !e.target.closest('.preset-btn') && !e.target.closest('.timer-btn') &&
-      !e.target.closest('.streak-modal')) {
-    hiddenInput.focus({ preventScroll: true });
+document.addEventListener('click', (e)=>{
+  if (isMobile) return;
+  if (!e.target.closest('.rules-toggle')&&!e.target.closest('.export-toggle')&&
+      !e.target.closest('select')&&!e.target.closest('button')&&
+      !e.target.closest('.nav-btn')&&!e.target.closest('.lang-select')&&
+      !e.target.closest('.preset-btn')&&!e.target.closest('.timer-btn')&&
+      !e.target.closest('.streak-modal')&&!e.target.closest('.mode-tab')) {
+    hiddenInput.focus({ preventScroll:true });
   }
 });
 </script>
