@@ -313,7 +313,21 @@
     font-family: 'Segoe UI', sans-serif;
   }
 
-  .hidden-input { position: fixed; opacity: 0; width: 1px; height: 1px; top: 0; left: 0; pointer-events: none; }
+  /*
+   * FIX (pinch-zoom scroll jump):
+   * Previously top:0; left:0 — when focus() fired on this element the browser
+   * scrolled the viewport to 0,0. Moving it to left:-9999px keeps it
+   * off-screen so focus has nowhere to scroll to.
+   */
+  .hidden-input {
+    position: fixed;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    top: 50%;
+    left: -9999px;
+    pointer-events: none;
+  }
 
   /* ── Q51/52 section ── */
   .short-answer-box {
@@ -597,7 +611,7 @@
           <button class="export-btn" onclick="exportPNG()">📷 Download as Image</button>
           <button class="secondary" onclick="copyText()">📋 Copy Plain Text</button>
         </div>
-        <div class="export-note">💡 Share your image on Reddit r/Korean, Discord, or KakaoTalk for feedback from other learners!</div>
+        <div class="export-note">💡 Share your image on Reddit r/WriteStreakKorean, Discord, or KakaoTalk for feedback from other learners!</div>
       </div>
     </div>
   </div>
@@ -758,7 +772,6 @@ function switchMode(mode) {
     setTarget(document.querySelector('[data-min="600"]'));
     showPrompt();
   } else if (mode === 'free') {
-    // Free write — counter but no target enforced
     targetMin = 0; targetMax = 99999;
     document.getElementById('targetDisplay').textContent = '∞';
     document.getElementById('remaining').textContent = '∞';
@@ -949,14 +962,22 @@ function buildGrid() {
   updateStats();
 }
 
+// FIX: Save and restore scroll position around every hiddenInput.focus() call.
+// When the browser focuses an input it may scroll to reveal it — even with
+// preventScroll:true on older Safari/WebKit. Capturing scrollX/Y before and
+// restoring after suppresses any viewport jump caused by the focus event,
+// which is the root cause of the pinch-zoom scroll jump.
 function setActiveCell(idx) {
   if (idx < 0 || idx >= TOTAL) return;
   cells[activeCellIndex]?.classList.remove('active');
   activeCellIndex = idx;
   cells[activeCellIndex].classList.add('active');
-  cells[activeCellIndex].scrollIntoView({ block:'nearest', inline:'nearest' });
+  cells[activeCellIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const sx = window.scrollX, sy = window.scrollY;
   const inp = document.getElementById('hiddenInput');
-  inp.value = ''; inp.focus({ preventScroll:true });
+  inp.value = '';
+  inp.focus({ preventScroll: true });
+  window.scrollTo(sx, sy);
 }
 
 function renderCell(idx) {
@@ -1001,16 +1022,13 @@ function validateAndFixPunctuation(idx) {
   const ch = content[idx];
 
   if (col === 0 && ch && PUNCTUATION.includes(ch)) {
-    // Auto-fix: move punctuation to last cell of previous line
     const prevLineEnd = idx - 1;
     if (prevLineEnd >= 0) {
-      // Find the last filled cell in previous row, or use the last cell
       content[prevLineEnd] = ch;
       renderCell(prevLineEnd);
       content[idx] = '';
       renderCell(idx);
       showMsg('info', '💡 Punctuation auto-moved to end of previous line (Rule #4).');
-      // Move cursor forward from original position
       setActiveCell(idx + 1 < TOTAL ? idx + 1 : idx);
       return true;
     }
@@ -1204,6 +1222,7 @@ showPrompt();
 updateTimerDisplay();
 setupMobileInput();
 
+// FIX: same scroll-save/restore applied here for the global click-to-focus handler
 document.addEventListener('click', (e)=>{
   if (isMobile) return;
   if (!e.target.closest('.rules-toggle')&&!e.target.closest('.export-toggle')&&
@@ -1211,7 +1230,9 @@ document.addEventListener('click', (e)=>{
       !e.target.closest('.nav-btn')&&!e.target.closest('.lang-select')&&
       !e.target.closest('.preset-btn')&&!e.target.closest('.timer-btn')&&
       !e.target.closest('.streak-modal')&&!e.target.closest('.mode-tab')) {
-    hiddenInput.focus({ preventScroll:true });
+    const sx = window.scrollX, sy = window.scrollY;
+    hiddenInput.focus({ preventScroll: true });
+    window.scrollTo(sx, sy);
   }
 });
 </script>
