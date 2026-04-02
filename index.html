@@ -225,7 +225,14 @@
 
   <div id="q5152Section" style="display:none">
     <div class="short-answer-box">
-      <h3>Q51 — Fill in the Blanks (빈칸 채우기)</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="margin:0;">Q51 — Fill in the Blanks (빈칸 채우기)</h3>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="nav-btn" id="q51prevBtn" onclick="prevQ51()" disabled>◀</button>
+          <span id="q51counter" style="font-size:12px;color:#888;font-weight:600;">1 / 5</span>
+          <button class="nav-btn" id="q51nextBtn" onclick="nextQ51()">▶</button>
+        </div>
+      </div>
       <p>Read the passage and write appropriate sentences for each blank. Each answer should be 1–2 sentences.</p>
       <div class="short-answer-prompt" id="q51prompt"></div>
       <div class="answer-line-label">① Answer:</div>
@@ -234,15 +241,20 @@
       <input type="text" class="answer-line" id="q51answer2" placeholder="두 번째 빈칸에 들어갈 내용을 쓰세요...">
     </div>
     <div class="short-answer-box">
-      <h3>Q52 — Sentence Rewriting (문장 고쳐 쓰기)</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="margin:0;">Q52 — Sentence Rewriting (문장 고쳐 쓰기)</h3>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="nav-btn" id="q52prevBtn" onclick="prevQ52()" disabled>◀</button>
+          <span id="q52counter" style="font-size:12px;color:#888;font-weight:600;">1 / 5</span>
+          <button class="nav-btn" id="q52nextBtn" onclick="nextQ52()">▶</button>
+        </div>
+      </div>
       <p>Rewrite the sentence in formal written Korean (문어체). Change informal/spoken style to formal essay style.</p>
       <div class="short-answer-prompt" id="q52prompt"></div>
       <div class="answer-line-label">Your rewritten sentence:</div>
       <input type="text" class="answer-line" id="q52answer" placeholder="문어체로 고쳐 쓰세요...">
     </div>
-    <div style="text-align:center;margin-bottom:16px;">
-      <button onclick="newQ5152Prompt()">New Q51/52 Prompts</button>
-    </div>
+
   </div>
 
   <div id="gridControls">
@@ -477,25 +489,61 @@ const prompts = {
   ]
 };
 
-const q5152Prompts = [
-  { q51: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오.\n\n사람들은 흔히 행복이 큰 성공에서 온다고 생각한다. 그러나 연구에 따르면 ( ㉠ ). 오히려 작은 일상의 즐거움이 지속적인 행복감을 만들어낸다. 따라서 행복하게 살기 위해서는 ( ㉡ ).", q52: "다음 문장을 문어체로 바꿔 쓰시오.\n\n「요즘 사람들이 책을 잘 안 읽는 것 같아. 스마트폰이 생긴 다음부터 그런 것 같은데.」" },
-  { q51: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오.\n\n현대 사회에서 환경 문제가 심각해지고 있다. 전문가들은 이 문제의 주요 원인이 ( ㉠ )고 말한다. 이를 해결하기 위해 각국 정부는 ( ㉡ ).", q52: "다음 문장을 문어체로 바꿔 쓰시오.\n\n「운동을 꾸준히 하면 건강에 좋은 거 다 알잖아. 그런데 왜 이렇게 하기 싫은 건지 모르겠어.」" }
+// Q51 and Q52 are independent arrays so users can cycle each separately
+const q51Prompts = [
+  // ✅ 제52회 — verbatim confirmed
+  { exam: "제52회", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n우리는 기분이 좋으면 밝은 표정을 짓는다. 그리고 기분이 좋지 않으면 표정이 어두워진다. 왜냐하면 ( ㉠ ). 그런데 이와 반대로 표정이 우리의 감정에 영향을 주기도 한다. 그래서 기분이 안 좋을 때 밝은 표정을 지으면 기분도 따라서 좋아진다. 그러므로 우울할 때일수록 ( ㉡ ) 것이 좋다." },
+  // ⚠️ 연습문제
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n사람들은 흔히 행복이 큰 성공에서 온다고 생각한다. 그러나 연구에 따르면 ( ㉠ ). 오히려 작은 일상의 즐거움이 지속적인 행복감을 만들어낸다. 따라서 행복하게 살기 위해서는 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n현대 사회에서 환경 문제가 심각해지고 있다. 전문가들은 이 문제의 주요 원인이 ( ㉠ )고 말한다. 이를 해결하기 위해 각국 정부는 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n독서는 지식을 쌓는 데 매우 효과적인 방법이다. 책을 많이 읽으면 ( ㉠ ). 또한 독서는 집중력과 사고력을 키우는 데도 도움이 된다. 따라서 어릴 때부터 독서 습관을 기르면 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n최근 1인 가구가 빠르게 증가하고 있다. 이러한 현상이 나타나는 이유는 ( ㉠ ). 1인 가구의 증가는 소비 패턴에도 변화를 가져왔는데, 소용량 제품과 간편식의 수요가 늘었다. 따라서 기업들은 ( ㉡ ) 필요가 있다." }
 ];
 
-let q5152Index = 0;
+const q52Prompts = [
+  // ✅ 제52회 — verbatim confirmed
+  { exam: "제52회", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 바빠서 친구들을 자주 못 만나. 이번 주말에 시간 나면 같이 밥이라도 먹자.」" },
+  // ⚠️ 연습문제
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 사람들이 책을 잘 안 읽는 것 같아. 스마트폰이 생긴 다음부터 그런 것 같은데.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「운동을 꾸준히 하면 건강에 좋은 거 다 알잖아. 그런데 왜 이렇게 하기 싫은 건지 모르겠어.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「우리 회사는 요즘 일이 너무 많아서 야근을 거의 매일 해. 빨리 새 직원이 들어왔으면 좋겠어.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 물가가 너무 올라서 생활하기 힘들어. 특히 식료품 값이 많이 올라서 장보기가 무서울 정도야.」" }
+];
+
+let q51Index = 0, q52Index = 0;
+
+
+
+function renderQ51() {
+  const p = q51Prompts[q51Index];
+  const badge = `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-bottom:8px;">${p.exam}</span><br>`;
+  document.getElementById('q51prompt').innerHTML = badge + p.text.replace(/\n/g, '<br>');
+  document.getElementById('q51answer1').value = '';
+  document.getElementById('q51answer2').value = '';
+  document.getElementById('q51counter').textContent = `${q51Index + 1} / ${q51Prompts.length}`;
+  document.getElementById('q51prevBtn').disabled = q51Index === 0;
+  document.getElementById('q51nextBtn').disabled = q51Index === q51Prompts.length - 1;
+}
+
+function renderQ52() {
+  const p = q52Prompts[q52Index];
+  const badge = `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-bottom:8px;">${p.exam}</span><br>`;
+  document.getElementById('q52prompt').innerHTML = badge + p.text.replace(/\n/g, '<br>');
+  document.getElementById('q52answer').value = '';
+  document.getElementById('q52counter').textContent = `${q52Index + 1} / ${q52Prompts.length}`;
+  document.getElementById('q52prevBtn').disabled = q52Index === 0;
+  document.getElementById('q52nextBtn').disabled = q52Index === q52Prompts.length - 1;
+}
 
 function loadQ5152() {
-  const p = q5152Prompts[q5152Index];
-  document.getElementById('q51prompt').innerHTML = p.q51.replace(/\n/g, '<br>');
-  document.getElementById('q52prompt').innerHTML = p.q52.replace(/\n/g, '<br>');
-  ['q51answer1','q51answer2','q52answer'].forEach(id => document.getElementById(id).value = '');
+  renderQ51();
+  renderQ52();
 }
 
-function newQ5152Prompt() {
-  q5152Index = (q5152Index + 1) % q5152Prompts.length;
-  loadQ5152();
-  cfEvent('prompt_navigated', { mode: 'q5152', index: q5152Index });
-}
+function nextQ51() { if (q51Index < q51Prompts.length - 1) { q51Index++; renderQ51(); cfEvent('prompt_navigated', { mode: 'q51', index: q51Index }); } }
+function prevQ51() { if (q51Index > 0) { q51Index--; renderQ51(); cfEvent('prompt_navigated', { mode: 'q51', index: q51Index }); } }
+function nextQ52() { if (q52Index < q52Prompts.length - 1) { q52Index++; renderQ52(); cfEvent('prompt_navigated', { mode: 'q52', index: q52Index }); } }
+function prevQ52() { if (q52Index > 0) { q52Index--; renderQ52(); cfEvent('prompt_navigated', { mode: 'q52', index: q52Index }); } }
 
 function switchMode(mode) {
   currentMode = mode;
