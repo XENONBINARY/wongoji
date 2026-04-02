@@ -8,22 +8,28 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #f5f0e8; color: #2c2c2c; min-height: 100vh; }
-  header { background: #1a1a2e; color: white; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-  header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  .streak-badge { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
-  .streak-fire { font-size: 18px; }
+
+  /* ── Header ──────────────────────────────────────────────── */
+  header { background: #1a1a2e; color: white; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .streak-badge { display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+  .streak-fire { font-size: 16px; }
   .streak-count { color: #ffd166; }
   .streak-label { color: #aaa; font-weight: 400; font-size: 11px; }
-  header span.version { font-size: 13px; color: #aaa; }
-  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
-  .mobile-banner { background: #1a1a2e; color: white; padding: 10px 16px; font-size: 13px; text-align: center; display: none; }
-  .mobile-banner.show { display: block; }
-  .mode-tabs { display: flex; gap: 0; margin-bottom: 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .mode-tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; background: white; color: #888; border: none; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  header span.version { font-size: 11px; color: #aaa; }
+
+  /* ── Layout ───────────────────────────────────────────────── */
+  .container { max-width: 900px; margin: 0 auto; padding: 16px 14px 80px; }
+
+  /* ── Mode Tabs ────────────────────────────────────────────── */
+  .mode-tabs { display: flex; gap: 0; margin-bottom: 14px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .mode-tab { flex: 1; padding: 10px 6px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: #888; border: none; border-bottom: 3px solid transparent; transition: all 0.15s; }
   .mode-tab.active { color: #1a1a2e; border-bottom-color: #e63946; background: #fafafa; }
   .mode-tab:hover { background: #f5f5f5; }
-  .prompt-box { background: white; border-left: 4px solid #e63946; padding: 16px 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+  /* ── Prompt Box (desktop) ─────────────────────────────────── */
+  .prompt-box { background: white; border-left: 4px solid #e63946; padding: 14px 18px; margin-bottom: 14px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
   .prompt-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e63946; }
   .prompt-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -34,7 +40,1149 @@
   .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .lang-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
   .lang-select { padding: 3px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 12px; background: white; cursor: pointer; }
-  .prompt-korean { font-size: 15px; line-height: 1.7; color: #333; }
+  .prompt-korean { font-size: 14px; line-height: 1.7; color: #333; }
+  .prompt-korean strong { color: #1a1a2e; }
+
+  /* ── Mobile Prompt Card ───────────────────────────────────── */
+  .mobile-prompt-card {
+    display: none;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .mobile-prompt-card.show { display: block; }
+  .mobile-prompt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-left: 4px solid #e63946;
+    user-select: none;
+  }
+  .mobile-prompt-header:active { background: #fafafa; }
+  .mobile-prompt-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  .mobile-prompt-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: white; background: #e63946;
+    padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+  }
+  .mobile-prompt-preview {
+    font-size: 12px; color: #555; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;
+  }
+  .mobile-prompt-toggle-btn {
+    font-size: 11px; color: #aaa; margin-left: 8px; flex-shrink: 0;
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .mobile-prompt-nav {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-top: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .mobile-prompt-nav-counter { font-size: 11px; color: #888; font-weight: 600; flex: 1; text-align: center; }
+  .mobile-prompt-body {
+    padding: 12px 14px 14px;
+    border-top: 1px solid #f0f0f0;
+    display: none;
+  }
+  .mobile-prompt-body.open { display: block; }
+  .mobile-prompt-body .prompt-korean { font-size: 13px; line-height: 1.75; }
+  .mobile-lang-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+  .mobile-translation-box {
+    margin-top: 10px; padding: 10px 12px; background: #f0f7ff;
+    border-left: 3px solid #3b82f6; border-radius: 0 6px 6px 0;
+    font-size: 12px; line-height: 1.6; display: none;
+  }
+  .mobile-translation-box.show { display: block; }
+
+  /* ── Free Write / Q5152 ───────────────────────────────────── */
+  .free-write-header { background: white; border-left: 4px solid #2a9d8f; padding: 14px 18px; margin-bottom: 14px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .free-write-header h2 { font-size: 15px; color: #1a1a2e; margin-bottom: 4px; }
+  .free-write-header p { font-size: 12px; color: #888; }
+
+  /* Desktop translation box */
+  .translation-box { margin-top: 12px; padding: 12px 14px; background: #f0f7ff; border-left: 3px solid #3b82f6; border-radius: 0 6px 6px 0; font-size: 13px; line-height: 1.6; display: none; }
+  .translation-box.show { display: block; }
+  .tl-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #3b82f6; margin-bottom: 6px; }
+  .tl-loading { color: #888; font-style: italic; }
+
+  /* ── Timer Bar ────────────────────────────────────────────── */
+  .timer-bar { background: white; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .timer-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+  .timer-display { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; color: #1a1a2e; letter-spacing: 2px; min-width: 80px; }
+  .timer-display.warning { color: #e63946; }
+  .timer-display.done { color: #e63946; animation: pulse 0.8s infinite; }
+  .jpm-display { font-size: 13px; color: #888; display: none; background: #f0f7ff; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+  .jpm-display.show { display: block; }
+  .jpm-display span { color: #1a1a2e; font-size: 15px; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .timer-controls { display: flex; gap: 6px; }
+  .timer-btn { padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; background: white; color: #333; }
+  .timer-btn.start { background: #2a9d8f; color: white; border-color: #2a9d8f; }
+  .timer-btn.start:hover { background: #21867a; }
+  .timer-btn.pause { background: #e9c46a; color: #333; border-color: #e9c46a; }
+  .timer-btn.reset { background: white; color: #666; }
+  .timer-presets { display: flex; gap: 6px; align-items: center; margin-left: auto; flex-wrap: wrap; }
+  .preset-btn { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #f0f0f0; color: #555; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+  .preset-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+  .timer-progress { width: 100%; height: 3px; background: #eee; border-radius: 2px; overflow: hidden; margin-top: 4px; }
+  .timer-progress-fill { height: 100%; background: #2a9d8f; border-radius: 2px; transition: width 1s linear, background 0.3s; }
+  .timer-progress-fill.warning { background: #e63946; }
+
+  /* ── Controls ─────────────────────────────────────────────── */
+  .controls { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  select, button { padding: 8px 14px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; }
+  select { background: white; }
+  button { background: #1a1a2e; color: white; border-color: #1a1a2e; font-weight: 600; transition: background 0.2s; }
+  button:hover { background: #e63946; border-color: #e63946; }
+  button.secondary { background: white; color: #1a1a2e; border-color: #ccc; }
+  button.secondary:hover { background: #f0f0f0; }
+  button.export-btn { background: #2a9d8f; border-color: #2a9d8f; }
+  button.export-btn:hover { background: #21867a; border-color: #21867a; }
+  .topik-limits { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .limit-tag { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #f0f0f0; color: #555; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+  .limit-tag.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+
+  /* ── Stats Bar (desktop) ──────────────────────────────────── */
+  .stats-bar { display: flex; gap: 20px; background: white; padding: 10px 16px; border-radius: 8px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); flex-wrap: wrap; align-items: center; }
+  .stat { display: flex; flex-direction: column; align-items: center; }
+  .stat-value { font-size: 22px; font-weight: 700; color: #1a1a2e; line-height: 1; }
+  .stat-value.warning { color: #e63946; }
+  .stat-value.good { color: #2a9d8f; }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 2px; }
+  .stat-divider { width: 1px; background: #eee; align-self: stretch; }
+  .progress-bar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; flex: 1; min-width: 100px; }
+  .progress-fill { height: 100%; background: #2a9d8f; border-radius: 3px; transition: width 0.2s; }
+  .progress-fill.over { background: #e63946; }
+
+  /* ── Mobile Textarea ──────────────────────────────────────── */
+  .mobile-input-box { background: white; border-radius: 10px; padding: 14px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: none; }
+  .mobile-input-box.show { display: block; }
+  .mobile-input-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+  .mobile-textarea {
+    width: 100%; min-height: 180px; padding: 12px;
+    border: 2px solid #ddd; border-radius: 8px;
+    font-size: 20px; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    line-height: 1.65; resize: vertical; outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .mobile-textarea:focus { border-color: #e63946; }
+  .mobile-input-hint { font-size: 11px; color: #aaa; margin-top: 6px; }
+
+  /* ── Sticky Bottom Bar (mobile only) ─────────────────────── */
+  .mobile-sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #1a1a2e;
+    color: white;
+    padding: 10px 20px;
+    z-index: 100;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+  }
+  .mobile-sticky-bar.show { display: flex; }
+  .msb-left { display: flex; flex-direction: column; }
+  .msb-count { font-size: 24px; font-weight: 700; line-height: 1; }
+  .msb-count.good { color: #2a9d8f; }
+  .msb-count.warning { color: #e63946; }
+  .msb-label { font-size: 10px; color: #aaa; margin-top: 1px; }
+  .msb-center { flex: 1; padding: 0 16px; }
+  .msb-progress { height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; overflow: hidden; }
+  .msb-progress-fill { height: 100%; background: #2a9d8f; border-radius: 2px; transition: width 0.2s; }
+  .msb-progress-fill.over { background: #e63946; }
+  .msb-status { font-size: 11px; color: #aaa; margin-top: 4px; text-align: center; }
+  .msb-right { display: flex; align-items: center; gap: 10px; }
+  .msb-timer { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 1px; color: #ffd166; }
+  .msb-timer.warning { color: #e63946; }
+  .msb-timer-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #2a9d8f; border: none; color: white;
+    font-size: 14px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .msb-timer-btn.pause-state { background: #e9c46a; }
+
+  /* ── Grid Section ─────────────────────────────────────────── */
+  .grid-section-label {
+    display: none;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #aaa; margin-bottom: 8px;
+  }
+  .wongoji-wrapper { background: white; padding: 20px 20px 20px 44px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-x: auto; }
+  .wongoji-grid { display: grid; grid-template-columns: repeat(20, 36px); gap: 0; border: 2px solid #2c2c2c; width: fit-content; margin: 0 auto; }
+  .cell { width: 36px; height: 36px; border: 1px solid #bbb; display: flex; align-items: center; justify-content: center; font-size: 15px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; position: relative; cursor: text; background: white; transition: background 0.1s; user-select: none; overflow: hidden; }
+  .cell.num { font-size: 11px; letter-spacing: -1px; }
+  .cell:hover { background: #f0f7ff; }
+  .cell.active { background: #dbeafe; outline: 2px solid #3b82f6; outline-offset: -2px; z-index: 2; }
+  .cell.error { background: #fee2e2 !important; }
+  .cell.indent { background: #f5f5f5; }
+  .cell.num-pending { background: #fef9c3; }
+  .cell.row-start::before { content: attr(data-row); position: absolute; left: -28px; font-size: 9px; color: #bbb; width: 24px; text-align: right; font-family: 'Segoe UI', sans-serif; }
+  .hidden-input { position: fixed; opacity: 0; width: 1px; height: 1px; top: 50%; left: -9999px; pointer-events: none; }
+
+  /* ── Q51/Q52 ──────────────────────────────────────────────── */
+  .short-answer-box { background: white; border-radius: 8px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 14px; }
+  .short-answer-box h3 { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .short-answer-box p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 12px; }
+  .short-answer-prompt { background: #f5f0e8; border-left: 4px solid #e63946; padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.7; color: #333; margin-bottom: 16px; }
+  .answer-line { border: none; border-bottom: 2px solid #ddd; width: 100%; padding: 8px 4px; font-size: 16px; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; outline: none; background: transparent; margin-bottom: 12px; display: block; transition: border-color 0.2s; }
+  .answer-line:focus { border-bottom-color: #3b82f6; }
+  .answer-line-label { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+
+  /* ── Export / Rules ───────────────────────────────────────── */
+  .export-panel { margin-top: 14px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+  .export-toggle { width: 100%; text-align: left; padding: 14px 20px; background: #2a9d8f; color: white; border: none; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .export-content { padding: 16px 20px; display: none; }
+  .export-content.open { display: block; }
+  .export-options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .export-note { font-size: 12px; color: #888; margin-top: 8px; }
+  .error-log { margin-top: 10px; min-height: 28px; }
+  .error-msg { background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 12px; }
+  .info-msg { background: #fef9c3; color: #854d0e; padding: 8px 12px; border-radius: 6px; font-size: 12px; }
+  .success-msg { background: #d1fae5; color: #065f46; padding: 8px 12px; border-radius: 6px; font-size: 12px; }
+  .rules-panel { margin-top: 16px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+  .rules-toggle { width: 100%; text-align: left; padding: 14px 20px; background: #1a1a2e; color: white; border: none; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .rules-content { padding: 16px 20px; display: none; }
+  .rules-content.open { display: block; }
+  .rule { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .rule-num { background: #e63946; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .rule-text { font-size: 13px; line-height: 1.5; color: #444; }
+  .rule-text strong { color: #1a1a2e; }
+
+  /* ── Streak Modal ─────────────────────────────────────────── */
+  .streak-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 999; }
+  .streak-modal.show { display: flex; }
+  .streak-modal-box { background: white; border-radius: 16px; padding: 32px; text-align: center; max-width: 300px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .streak-modal-fire { font-size: 64px; margin-bottom: 8px; }
+  .streak-modal-count { font-size: 48px; font-weight: 900; color: #e63946; }
+  .streak-modal-label { font-size: 16px; color: #888; margin-bottom: 20px; }
+  .streak-modal-msg { font-size: 14px; color: #444; margin-bottom: 20px; line-height: 1.5; }
+  .streak-modal-close { padding: 10px 24px; background: #1a1a2e; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  footer { text-align: center; padding: 20px; font-size: 12px; color: #aaa; margin-top: 16px; }
+
+  /* ── Mobile overrides ─────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .container { padding: 12px 12px 90px; }
+    header h1 { font-size: 15px; }
+
+    /* Hide desktop prompt, show mobile prompt card */
+    #promptSection .prompt-box { display: none; }
+    .mobile-prompt-card { display: block; }
+
+    /* Hide desktop stats bar, show sticky bar instead */
+    .stats-bar { display: none; }
+    .mobile-sticky-bar.show { display: flex; }
+
+    /* Show grid section label */
+    .grid-section-label { display: block; }
+
+    /* Timer bar: compact on mobile */
+    .timer-bar { padding: 8px 12px; gap: 8px; }
+    .timer-display { font-size: 22px; min-width: 70px; }
+    .timer-presets { margin-left: 0; }
+    .preset-btn { font-size: 10px; padding: 3px 8px; }
+    .jpm-display { display: none !important; }
+
+    /* Grid: smaller cells on mobile */
+    .wongoji-wrapper { padding: 12px 12px 12px 28px; }
+    .wongoji-grid { grid-template-columns: repeat(20, 22px); }
+    .cell { width: 22px !important; height: 22px !important; font-size: 9px !important; }
+    .cell.num { font-size: 7px !important; }
+    .cell.row-start::before { left: -20px; font-size: 7px; width: 16px; }
+
+    /* Controls: tighter */
+    .controls { gap: 8px; margin-bottom: 10px; }
+    .topik-limits { gap: 6px; }
+    .limit-tag { font-size: 10px; padding: 3px 8px; }
+    button, select { padding: 7px 12px; font-size: 12px; }
+
+    /* Free write header compact */
+    .free-write-header { padding: 12px 14px; }
+    .free-write-header h2 { font-size: 14px; }
+
+    /* Q5152 */
+    .short-answer-prompt { font-size: 13px; }
+    .answer-line { font-size: 15px; }
+  }
+
+  /* Hide mobile-only elements on desktop */
+  @media (min-width: 769px) {
+    .mobile-prompt-card { display: none !important; }
+    .mobile-sticky-bar { display: none !important; }
+    .grid-section-label { display: none !important; }
+    .mobile-input-box { display: none !important; }
+    .mobile-banner { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="streak-modal" id="streakModal">
+  <div class="streak-modal-box">
+    <div class="streak-modal-fire">🔥</div>
+    <div class="streak-modal-count" id="modalStreakCount">1</div>
+    <div class="streak-modal-label">Day Streak!</div>
+    <div class="streak-modal-msg" id="modalStreakMsg"></div>
+    <button class="streak-modal-close" onclick="closeStreakModal()">계속 연습! Keep going!</button>
+  </div>
+</div>
+
+<header>
+  <h1>원고지 練習 · Wongoji</h1>
+  <div class="header-right">
+    <div class="streak-badge">
+      <span class="streak-fire">🔥</span>
+      <span class="streak-count" id="streakCount">0</span>
+      <span class="streak-label">day streak</span>
+    </div>
+    <span class="version">Beta v0.7</span>
+  </div>
+</header>
+
+<!-- Mobile sticky bottom bar (hidden on desktop) -->
+<div class="mobile-sticky-bar" id="mobileStickyBar">
+  <div class="msb-left">
+    <div class="msb-count" id="msbCount">0</div>
+    <div class="msb-label">자 written</div>
+  </div>
+  <div class="msb-center">
+    <div class="msb-progress"><div class="msb-progress-fill" id="msbProgressFill" style="width:0%"></div></div>
+    <div class="msb-status" id="msbStatus">시작!</div>
+  </div>
+  <div class="msb-right">
+    <div class="msb-timer" id="msbTimer">20:00</div>
+    <button class="msb-timer-btn" id="msbTimerBtn" onclick="toggleTimerMobile()">▶</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('q53')">Q53</button>
+    <button class="mode-tab" onclick="switchMode('q54')">Q54</button>
+    <button class="mode-tab" onclick="switchMode('free')">Free</button>
+    <button class="mode-tab" onclick="switchMode('q5152')">Q51/52</button>
+  </div>
+
+  <!-- Desktop prompt box -->
+  <div id="promptSection">
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <div class="prompt-label">📝 TOPIK Prompt (Korean — 원문)</div>
+        <div class="prompt-meta">
+          <div class="prompt-nav">
+            <button class="nav-btn" id="prevBtn" onclick="prevPrompt()">◀</button>
+            <span class="prompt-counter" id="promptCounter">1 / 5</span>
+            <button class="nav-btn" id="nextBtn" onclick="nextPrompt()">▶</button>
+          </div>
+          <div class="lang-row">
+            <span>Translate:</span>
+            <select class="lang-select" id="langSelect" onchange="handleLangChange()">
+              <option value="">— None —</option>
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+              <option value="ja">日本語</option>
+              <option value="vi">Tiếng Việt</option>
+              <option value="mn">Монгол</option>
+              <option value="uz">O'zbek</option>
+              <option value="ru">Русский</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="prompt-korean" id="promptText"></div>
+      <div class="translation-box" id="translationBox">
+        <div class="tl-label" id="tlLabel"></div>
+        <div id="tlText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile prompt card (replaces desktop prompt box on mobile) -->
+  <div class="mobile-prompt-card" id="mobilePromptCard">
+    <div class="mobile-prompt-header" onclick="toggleMobilePrompt()">
+      <div class="mobile-prompt-left">
+        <span class="mobile-prompt-badge" id="mobilePromptBadge">Q53</span>
+        <span class="mobile-prompt-preview" id="mobilePromptPreview">Loading prompt...</span>
+      </div>
+      <button class="mobile-prompt-toggle-btn" id="mobilePromptToggleBtn">▼ 보기</button>
+    </div>
+    <div class="mobile-prompt-nav">
+      <button class="nav-btn" id="mobilePrevBtn" onclick="prevPrompt(); event.stopPropagation();">◀</button>
+      <span class="mobile-prompt-nav-counter" id="mobilePromptCounter">1 / 9</span>
+      <button class="nav-btn" id="mobileNextBtn" onclick="nextPrompt(); event.stopPropagation();">▶</button>
+    </div>
+    <div class="mobile-prompt-body" id="mobilePromptBody">
+      <div class="prompt-korean" id="mobilePromptText"></div>
+      <div class="mobile-lang-row">
+        <span style="font-size:11px;color:#888;">번역:</span>
+        <select class="lang-select" id="mobileLangSelect" onchange="handleMobileLangChange()">
+          <option value="">— None —</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="mn">Монгол</option>
+          <option value="uz">O'zbek</option>
+          <option value="ru">Русский</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+      <div class="mobile-translation-box" id="mobileTranslationBox">
+        <div class="tl-label" id="mobileTlLabel"></div>
+        <div id="mobileTlText"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="freeWriteSection" style="display:none">
+    <div class="free-write-header">
+      <h2>✍️ Free Write Mode</h2>
+      <p>No prompt, no limits — write freely in Korean.</p>
+    </div>
+  </div>
+
+  <div id="q5152Section" style="display:none">
+    <div class="short-answer-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="margin:0;">Q51 — Fill in the Blanks (빈칸 채우기)</h3>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="nav-btn" id="q51prevBtn" onclick="prevQ51()" disabled>◀</button>
+          <span id="q51counter" style="font-size:12px;color:#888;font-weight:600;">1 / 5</span>
+          <button class="nav-btn" id="q51nextBtn" onclick="nextQ51()">▶</button>
+        </div>
+      </div>
+      <p>Read the passage and write appropriate sentences for each blank.</p>
+      <div class="short-answer-prompt" id="q51prompt"></div>
+      <div class="answer-line-label">① Answer:</div>
+      <input type="text" class="answer-line" id="q51answer1" placeholder="첫 번째 빈칸에 들어갈 내용을 쓰세요...">
+      <div class="answer-line-label">② Answer:</div>
+      <input type="text" class="answer-line" id="q51answer2" placeholder="두 번째 빈칸에 들어갈 내용을 쓰세요...">
+    </div>
+    <div class="short-answer-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="margin:0;">Q52 — Sentence Rewriting (문장 고쳐 쓰기)</h3>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="nav-btn" id="q52prevBtn" onclick="prevQ52()" disabled>◀</button>
+          <span id="q52counter" style="font-size:12px;color:#888;font-weight:600;">1 / 5</span>
+          <button class="nav-btn" id="q52nextBtn" onclick="nextQ52()">▶</button>
+        </div>
+      </div>
+      <p>Rewrite the sentence in formal written Korean (문어체).</p>
+      <div class="short-answer-prompt" id="q52prompt"></div>
+      <div class="answer-line-label">Your rewritten sentence:</div>
+      <input type="text" class="answer-line" id="q52answer" placeholder="문어체로 고쳐 쓰세요...">
+    </div>
+  </div>
+
+  <div id="gridControls">
+    <div class="controls">
+      <button class="secondary" onclick="clearGrid()">Clear Essay</button>
+      <div class="topik-limits" id="targetLimits">
+        <span style="font-size:12px;color:#888;">Target:</span>
+        <div class="limit-tag active" id="q53tag" data-min="150" data-max="300" onclick="setTarget(this)">Q53: 150–300자</div>
+        <div class="limit-tag" id="q54tag" data-min="600" data-max="700" onclick="setTarget(this)">Q54: 600–700자</div>
+      </div>
+    </div>
+
+    <div class="timer-bar">
+      <div class="timer-label">⏱</div>
+      <div class="timer-display" id="timerDisplay">20:00</div>
+      <div class="jpm-display" id="jpmDisplay">자/min: <span id="jpmValue">—</span></div>
+      <div class="timer-controls">
+        <button class="timer-btn start" id="timerStartBtn" onclick="startTimer()">Start</button>
+        <button class="timer-btn pause" id="timerPauseBtn" onclick="pauseTimer()" style="display:none">Pause</button>
+        <button class="timer-btn reset" onclick="resetTimer()">Reset</button>
+      </div>
+      <div class="timer-presets">
+        <span style="font-size:11px;color:#aaa;">Preset:</span>
+        <div class="preset-btn active" data-seconds="1200" onclick="setTimerPreset(this)">Q53 — 20min</div>
+        <div class="preset-btn" data-seconds="3000" onclick="setTimerPreset(this)">Q54 — 50min</div>
+        <div class="preset-btn" data-seconds="600" onclick="setTimerPreset(this)">Quick — 10min</div>
+      </div>
+      <div class="timer-progress" style="flex-basis:100%">
+        <div class="timer-progress-fill" id="timerFill" style="width:100%"></div>
+      </div>
+    </div>
+
+    <!-- Desktop stats bar only -->
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-value" id="charCount">0</div><div class="stat-label">자 Written</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-value" id="remaining">300</div><div class="stat-label">Remaining</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-value" id="targetDisplay">150–300</div><div class="stat-label">Target 자</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-value" id="statusDisplay">시작!</div><div class="stat-label">Status</div></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="error-log" id="errorLog"></div>
+
+    <!-- Mobile textarea: shown first on mobile -->
+    <div class="mobile-input-box" id="mobileInputBox">
+      <div class="mobile-input-label">✏️ 여기에 쓰세요 — Type Korean here</div>
+      <textarea class="mobile-textarea" id="mobileTextarea" placeholder="여기에 한국어로 쓰세요..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="mobile-input-hint">The grid below updates as you type.</div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-section-label">원고지 그리드 (미리보기)</div>
+    <div class="wongoji-wrapper">
+      <div class="wongoji-grid" id="wongoji"></div>
+    </div>
+
+    <input type="text" class="hidden-input" id="hiddenInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <div class="export-panel">
+      <button class="export-toggle" onclick="toggleExport()">
+        📤 Export & Share <span id="exportArrow">▼</span>
+      </button>
+      <div class="export-content" id="exportContent">
+        <div class="export-options">
+          <button class="export-btn" onclick="exportPNG()">📷 Download as Image</button>
+          <button class="secondary" onclick="copyText()">📋 Copy Plain Text</button>
+        </div>
+        <div class="export-note">💡 Share your image on Reddit r/WriteStreakKorean for feedback!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules-panel">
+    <button class="rules-toggle" onclick="toggleRules()">
+      📋 Wongoji Rules for TOPIK II <span id="rulesArrow">▼</span>
+    </button>
+    <div class="rules-content" id="rulesContent">
+      <div class="rule"><div class="rule-num">1</div><div class="rule-text"><strong>One character per box.</strong> Each complete Hangul syllable block occupies exactly one cell.</div></div>
+      <div class="rule"><div class="rule-num">2</div><div class="rule-text"><strong>Spaces count as 자.</strong> One empty box per space.</div></div>
+      <div class="rule"><div class="rule-num">3</div><div class="rule-text"><strong>Paragraph indent.</strong> Leave the first box of each paragraph empty. Press Enter to auto-indent.</div></div>
+      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation.</strong> No punctuation at the start of a line — the app moves it automatically.</div></div>
+      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers: 2 digits per box.</strong> 20 → [20], 365 → [36][5], 2012 → [20][12].</div></div>
+      <div class="rule"><div class="rule-num">6</div><div class="rule-text"><strong>Character limits.</strong> Q53: 150–300자. Q54: 600–700자.</div></div>
+      <div class="rule"><div class="rule-num">7</div><div class="rule-text"><strong>No title.</strong> Begin your essay directly.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>wongoji.com · Korean Writing Practice · Beta v0.7</footer>
+<canvas id="exportCanvas" style="display:none"></canvas>
+
+<script>
+// ── Analytics ──────────────────────────────────────────────────
+function cfEvent(name, data) {
+  try {
+    if (window.cf && window.cf.beacon) { window.cf.beacon.sendEvent({ name, data }); }
+    else { window.__cfQ = window.__cfQ || []; window.__cfQ.push({ name, data }); }
+  } catch(e) {}
+}
+setTimeout(() => {
+  if (window.__cfQ && window.cf && window.cf.beacon) {
+    window.__cfQ.forEach(e => cfEvent(e.name, e.data));
+    window.__cfQ = [];
+  }
+}, 3000);
+
+// ── Milestone tracking ─────────────────────────────────────────
+const MILESTONES = [50, 150, 300, 600, 700];
+let firedMilestones = new Set();
+function checkMilestones(written) {
+  MILESTONES.forEach(m => {
+    if (written >= m && !firedMilestones.has(m)) {
+      firedMilestones.add(m);
+      cfEvent('milestone_reached', { chars: m, mode: currentMode });
+    }
+  });
+}
+
+const COLS = 20;
+const PUNCTUATION = ['.', ',', '!', '?', '！', '？', '；', ';', '：', ':', '。', '，'];
+const LANG_NAMES = { en:'English', zh:'中文', ja:'日本語', vi:'Tiếng Việt', mn:'Монгол', uz:"O'zbek", ru:'Русский', es:'Español' };
+const MYMEMORY_CODES = { en:'en', zh:'zh-CN', ja:'ja', vi:'vi', mn:'mn', uz:'uz', ru:'ru', es:'es' };
+
+let ROWS = 16, TOTAL = COLS * ROWS;
+let cells = [], content = [];
+let activeCellIndex = 0;
+let currentLevel = 3, targetMin = 150, targetMax = 300;
+let currentMode = 'q53';
+let promptIndex = { 3: 0, 5: 0 };
+let isComposing = false;
+let numPending = false, numFirst = '', numCell = -1;
+let currentLang = '', tlCache = {};
+let isMobile = false;
+let timerTotal = 1200, timerLeft = 1200, timerRunning = false, timerInterval = null, timerElapsed = 0;
+let sessionMarked = false;
+let mobilePromptOpen = false;
+
+// ── Mobile detection ───────────────────────────────────────────
+function detectMobile() {
+  isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) || window.innerWidth < 768;
+  if (isMobile) {
+    document.getElementById('mobileInputBox').classList.add('show');
+    document.getElementById('mobileStickyBar').classList.add('show');
+    document.getElementById('hiddenInput').style.display = 'none';
+    cfEvent('session_start', { device: 'mobile' });
+  } else {
+    cfEvent('session_start', { device: 'desktop' });
+  }
+}
+
+// ── Mobile prompt card ─────────────────────────────────────────
+function toggleMobilePrompt() {
+  mobilePromptOpen = !mobilePromptOpen;
+  const body = document.getElementById('mobilePromptBody');
+  const btn = document.getElementById('mobilePromptToggleBtn');
+  body.classList.toggle('open', mobilePromptOpen);
+  btn.textContent = mobilePromptOpen ? '▲ 닫기' : '▼ 보기';
+}
+
+function updateMobilePromptCard() {
+  if (currentMode !== 'q53' && currentMode !== 'q54') return;
+  const pool = prompts[currentLevel];
+  const idx = promptIndex[currentLevel];
+  const p = pool[idx];
+
+  // Badge: exam label
+  document.getElementById('mobilePromptBadge').textContent = p.exam || p.q;
+
+  // Preview: strip HTML tags, show first ~50 chars
+  const plain = p.text.replace(/<[^>]+>/g, '').replace(/\n/g, ' ');
+  document.getElementById('mobilePromptPreview').textContent = plain.slice(0, 55) + (plain.length > 55 ? '…' : '');
+
+  // Counter
+  document.getElementById('mobilePromptCounter').textContent = `${idx + 1} / ${pool.length}`;
+  document.getElementById('mobilePrevBtn').disabled = idx === 0;
+  document.getElementById('mobileNextBtn').disabled = idx === pool.length - 1;
+
+  // Full text
+  const examLabel = p.exam ? `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-right:8px;">${p.exam}</span>` : "";
+  document.getElementById('mobilePromptText').innerHTML = `${examLabel}<strong>${p.q}</strong><br><br>${p.text.replace(/\n/g,'<br>')}`;
+
+  // Re-translate if language is selected
+  if (currentLang) translateMobilePrompt(currentLang);
+  else document.getElementById('mobileTranslationBox').classList.remove('show');
+}
+
+function handleMobileLangChange() {
+  currentLang = document.getElementById('mobileLangSelect').value;
+  // Sync desktop select too
+  document.getElementById('langSelect').value = currentLang;
+  if (!currentLang) {
+    document.getElementById('mobileTranslationBox').classList.remove('show');
+    document.getElementById('translationBox').classList.remove('show');
+    return;
+  }
+  translateMobilePrompt(currentLang);
+}
+
+async function translateMobilePrompt(lang) {
+  const text = getCurrentPromptPlain();
+  const key = `${lang}::${text.slice(0,40)}`;
+  const box = document.getElementById('mobileTranslationBox');
+  const label = document.getElementById('mobileTlLabel');
+  const textEl = document.getElementById('mobileTlText');
+  if (tlCache[key]) {
+    label.textContent = LANG_NAMES[lang] + ' translation';
+    textEl.innerHTML = tlCache[key].replace(/\n/g,'<br>');
+    box.classList.add('show'); return;
+  }
+  box.classList.add('show');
+  label.textContent = LANG_NAMES[lang] + ' translation';
+  textEl.innerHTML = '<span style="color:#888;font-style:italic;">Translating...</span>';
+  const langCode = MYMEMORY_CODES[lang] || 'en';
+  try {
+    const translated = await Promise.all(text.split('\n').map(async line => {
+      if (!line.trim()) return '';
+      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(line)}&langpair=ko|${langCode}`);
+      const data = await res.json();
+      return data?.responseData?.translatedText || line;
+    }));
+    const result = translated.join('\n');
+    tlCache[key] = result;
+    label.textContent = LANG_NAMES[lang] + ' translation';
+    textEl.innerHTML = result.replace(/\n/g,'<br>');
+    cfEvent('prompt_translated', { lang, mode: currentMode });
+  } catch {
+    textEl.innerHTML = '<span style="color:#991b1b;">Translation failed.</span>';
+  }
+}
+
+// ── Mobile textarea input ──────────────────────────────────────
+function setupMobileInput() {
+  const ta = document.getElementById('mobileTextarea');
+  ta.addEventListener('input', () => {
+    const text = ta.value;
+    content = Array(TOTAL).fill('');
+    let cellIdx = 1;
+    content[0] = ' ';
+    for (let i = 0; i < text.length && cellIdx < TOTAL; i++) {
+      const ch = text[i];
+      if (ch === '\n') {
+        const nextRowStart = Math.ceil(cellIdx / COLS) * COLS;
+        if (nextRowStart < TOTAL) { content[nextRowStart] = ' '; cellIdx = nextRowStart + 1; }
+      } else { content[cellIdx] = ch; cellIdx++; }
+    }
+    cells.forEach((cell, i) => {
+      cell.textContent = content[i] || '';
+      cell.classList.remove('error', 'num', 'active', 'indent', 'num-pending');
+      if (i % COLS === 0) { cell.classList.add('row-start'); cell.dataset.row = Math.floor(i/COLS)+1; }
+      if (content[i] === ' ' && i % COLS === 0) cell.classList.add('indent');
+      if (content[i] && /^\d{2}$/.test(content[i])) cell.classList.add('num');
+    });
+    updateStats();
+    checkSessionComplete();
+  });
+}
+
+// ── Timer (mobile toggle) ─────────────────────────────────────
+function toggleTimerMobile() {
+  if (timerRunning) pauseTimer();
+  else startTimer();
+}
+
+function updateMobileStickyBar() {
+  if (!isMobile) return;
+  const written = content.filter(c => c !== '').length;
+  const countEl = document.getElementById('msbCount');
+  const fillEl = document.getElementById('msbProgressFill');
+  const statusEl = document.getElementById('msbStatus');
+  const timerEl = document.getElementById('msbTimer');
+  const btnEl = document.getElementById('msbTimerBtn');
+
+  countEl.textContent = written;
+  timerEl.textContent = formatTime(timerLeft);
+
+  // Color coding
+  countEl.className = 'msb-count';
+  timerEl.className = 'msb-timer';
+  if (currentMode === 'free') {
+    statusEl.textContent = written > 0 ? '✓ Writing!' : '시작!';
+    fillEl.style.width = Math.min((written/200)*100, 100) + '%';
+    fillEl.className = 'msb-progress-fill';
+  } else {
+    const pct = Math.min((written/targetMax)*100, 100);
+    fillEl.style.width = pct + '%';
+    if (written === 0) { statusEl.textContent = '시작!'; fillEl.className = 'msb-progress-fill'; }
+    else if (written < targetMin) { statusEl.textContent = `+${targetMin - written}자 needed`; fillEl.className = 'msb-progress-fill'; }
+    else if (written <= targetMax) { statusEl.textContent = '✓ In range!'; countEl.classList.add('good'); fillEl.className = 'msb-progress-fill'; }
+    else { statusEl.textContent = `${written - targetMax}자 over!`; countEl.classList.add('warning'); fillEl.className = 'msb-progress-fill over'; }
+  }
+
+  if (timerLeft <= timerTotal * 0.2 && timerLeft > 0) timerEl.classList.add('warning');
+  btnEl.textContent = timerRunning ? '⏸' : '▶';
+  btnEl.className = 'msb-timer-btn' + (timerRunning ? ' pause-state' : '');
+}
+
+// ── Q51/Q52 ────────────────────────────────────────────────────
+const q51Prompts = [
+  { exam: "제52회", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n우리는 기분이 좋으면 밝은 표정을 짓는다. 그리고 기분이 좋지 않으면 표정이 어두워진다. 왜냐하면 ( ㉠ ). 그런데 이와 반대로 표정이 우리의 감정에 영향을 주기도 한다. 그래서 기분이 안 좋을 때 밝은 표정을 지으면 기분도 따라서 좋아진다. 그러므로 우울할 때일수록 ( ㉡ ) 것이 좋다." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n사람들은 흔히 행복이 큰 성공에서 온다고 생각한다. 그러나 연구에 따르면 ( ㉠ ). 오히려 작은 일상의 즐거움이 지속적인 행복감을 만들어낸다. 따라서 행복하게 살기 위해서는 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n현대 사회에서 환경 문제가 심각해지고 있다. 전문가들은 이 문제의 주요 원인이 ( ㉠ )고 말한다. 이를 해결하기 위해 각국 정부는 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n독서는 지식을 쌓는 데 매우 효과적인 방법이다. 책을 많이 읽으면 ( ㉠ ). 또한 독서는 집중력과 사고력을 키우는 데도 도움이 된다. 따라서 어릴 때부터 독서 습관을 기르면 ( ㉡ )." },
+  { exam: "연습문제", text: "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰십시오.\n\n최근 1인 가구가 빠르게 증가하고 있다. 이러한 현상이 나타나는 이유는 ( ㉠ ). 1인 가구의 증가는 소비 패턴에도 변화를 가져왔는데, 소용량 제품과 간편식의 수요가 늘었다. 따라서 기업들은 ( ㉡ ) 필요가 있다." }
+];
+
+const q52Prompts = [
+  { exam: "제52회", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 바빠서 친구들을 자주 못 만나. 이번 주말에 시간 나면 같이 밥이라도 먹자.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 사람들이 책을 잘 안 읽는 것 같아. 스마트폰이 생긴 다음부터 그런 것 같은데.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「운동을 꾸준히 하면 건강에 좋은 거 다 알잖아. 그런데 왜 이렇게 하기 싫은 건지 모르겠어.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「우리 회사는 요즘 일이 너무 많아서 야근을 거의 매일 해. 빨리 새 직원이 들어왔으면 좋겠어.」" },
+  { exam: "연습문제", text: "다음의 밑줄 친 부분을 격식체로 고쳐 쓰시오.\n\n「요즘 물가가 너무 올라서 생활하기 힘들어. 특히 식료품 값이 많이 올라서 장보기가 무서울 정도야.」" }
+];
+
+let q51Index = 0, q52Index = 0;
+
+function renderQ51() {
+  const p = q51Prompts[q51Index];
+  const badge = `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-bottom:8px;">${p.exam}</span><br>`;
+  document.getElementById('q51prompt').innerHTML = badge + p.text.replace(/\n/g, '<br>');
+  document.getElementById('q51answer1').value = '';
+  document.getElementById('q51answer2').value = '';
+  document.getElementById('q51counter').textContent = `${q51Index + 1} / ${q51Prompts.length}`;
+  document.getElementById('q51prevBtn').disabled = q51Index === 0;
+  document.getElementById('q51nextBtn').disabled = q51Index === q51Prompts.length - 1;
+}
+
+function renderQ52() {
+  const p = q52Prompts[q52Index];
+  const badge = `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-bottom:8px;">${p.exam}</span><br>`;
+  document.getElementById('q52prompt').innerHTML = badge + p.text.replace(/\n/g, '<br>');
+  document.getElementById('q52answer').value = '';
+  document.getElementById('q52counter').textContent = `${q52Index + 1} / ${q52Prompts.length}`;
+  document.getElementById('q52prevBtn').disabled = q52Index === 0;
+  document.getElementById('q52nextBtn').disabled = q52Index === q52Prompts.length - 1;
+}
+
+function loadQ5152() { renderQ51(); renderQ52(); }
+function nextQ51() { if (q51Index < q51Prompts.length - 1) { q51Index++; renderQ51(); cfEvent('prompt_navigated', { mode: 'q51', index: q51Index }); } }
+function prevQ51() { if (q51Index > 0) { q51Index--; renderQ51(); cfEvent('prompt_navigated', { mode: 'q51', index: q51Index }); } }
+function nextQ52() { if (q52Index < q52Prompts.length - 1) { q52Index++; renderQ52(); cfEvent('prompt_navigated', { mode: 'q52', index: q52Index }); } }
+function prevQ52() { if (q52Index > 0) { q52Index--; renderQ52(); cfEvent('prompt_navigated', { mode: 'q52', index: q52Index }); } }
+
+// ── Prompts data ───────────────────────────────────────────────
+const prompts = {
+  3: [
+    { exam:"제47회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'현대인의 독서 습관 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 성인의 독서량이 10년간 어떻게 변화했는가?\n• 독서가 감소하는 주요 원인 두 가지는 무엇인가?\n• 독서 감소로 인해 예상되는 문제는 무엇인가?", plain:"다음을 참고하여 '현대인의 독서 습관 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 성인의 독서량이 10년간 어떻게 변화했는가?\n• 독서가 감소하는 주요 원인 두 가지는 무엇인가?\n• 독서 감소로 인해 예상되는 문제는 무엇인가?" },
+    { exam:"제52회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'아이를 꼭 낳아야 하는가'</strong>에 대한 조사 결과를 설명하는 글을 200자 이상 300자 이하로 쓰시오.\n\n• 남성과 여성의 응답 비율(그렇다/아니다)은 어떠한가?\n• 성별에 따라 인식 차이가 나타나는가?\n• '아니다'라고 응답한 주요 이유 두 가지는 무엇인가?", plain:"다음을 참고하여 '아이를 꼭 낳아야 하는가'에 대한 조사 결과를 설명하는 글을 200자 이상 300자 이하로 쓰시오.\n\n• 남성과 여성의 응답 비율(그렇다/아니다)은 어떠한가?\n• 성별에 따라 인식 차이가 나타나는가?\n• '아니다'라고 응답한 주요 이유 두 가지는 무엇인가?" },
+    { exam:"제60회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'고등학생 독서량 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 고등학생의 연간 독서량은 최근 몇 년간 어떻게 변화했는가?\n• 변화의 주요 원인 두 가지는 무엇인가?\n• 이에 따른 대책으로 무엇을 제안할 수 있는가?", plain:"다음을 참고하여 '고등학생 독서량 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 고등학생의 연간 독서량은 최근 몇 년간 어떻게 변화했는가?\n• 변화의 주요 원인 두 가지는 무엇인가?\n• 이에 따른 대책으로 무엇을 제안할 수 있는가?" },
+    { exam:"제64회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'한국인의 여가 활동 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 한국인의 주요 여가 활동이 과거와 현재 어떻게 달라졌는가?\n• 변화의 원인 두 가지는 무엇인가?\n• 이러한 변화가 사회에 미치는 영향은 무엇인가?", plain:"다음을 참고하여 '한국인의 여가 활동 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 한국인의 주요 여가 활동이 과거와 현재 어떻게 달라졌는가?\n• 변화의 원인 두 가지는 무엇인가?\n• 이러한 변화가 사회에 미치는 영향은 무엇인가?" },
+    { exam:"제83회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'한국의 합계출산율과 고령인구 비율 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 합계출산율과 고령인구 비율은 각각 어떻게 변화했는가?\n• 두 지표 사이에 어떤 관계가 있는가?\n• 이러한 변화의 원인 두 가지는 무엇인가?", plain:"다음을 참고하여 '한국의 합계출산율과 고령인구 비율 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 합계출산율과 고령인구 비율은 각각 어떻게 변화했는가?\n• 두 지표 사이에 어떤 관계가 있는가?\n• 이러한 변화의 원인 두 가지는 무엇인가?" },
+    { exam:"제91회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'1인 가구 증가 현황'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 1인 가구의 비율이 연도별로 어떻게 변화했는가?\n• 1인 가구가 증가하는 주요 원인 두 가지는 무엇인가?\n• 1인 가구 증가로 인한 사회적 변화는 무엇인가?", plain:"다음을 참고하여 '1인 가구 증가 현황'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 1인 가구의 비율이 연도별로 어떻게 변화했는가?\n• 1인 가구가 증가하는 주요 원인 두 가지는 무엇인가?\n• 1인 가구 증가로 인한 사회적 변화는 무엇인가?" },
+    { exam:"제96회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'온라인 쇼핑 이용 현황'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령대별 온라인 쇼핑 이용률은 어떠한가?\n• 온라인 쇼핑 이용이 증가하는 원인 두 가지는 무엇인가?\n• 온라인 쇼핑 증가로 인한 문제점과 해결 방안은 무엇인가?", plain:"다음을 참고하여 '온라인 쇼핑 이용 현황'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령대별 온라인 쇼핑 이용률은 어떠한가?\n• 온라인 쇼핑 이용이 증가하는 원인 두 가지는 무엇인가?\n• 온라인 쇼핑 증가로 인한 문제점과 해결 방안은 무엇인가?" },
+    { exam:"연습문제", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'환경 보호에 대한 시민 인식 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 환경 보호에 관심을 갖는 시민의 비율이 어떻게 변화했는가?\n• 관심이 높아진 주요 원인 두 가지는 무엇인가?\n• 시민들이 실천하는 환경 보호 활동에는 어떤 것들이 있는가?", plain:"다음을 참고하여 '환경 보호에 대한 시민 인식 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 환경 보호에 관심을 갖는 시민의 비율이 어떻게 변화했는가?\n• 관심이 높아진 주요 원인 두 가지는 무엇인가?\n• 시민들이 실천하는 환경 보호 활동에는 어떤 것들이 있는가?" },
+    { exam:"연습문제", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'스마트폰 과의존 실태'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령별 스마트폰 과의존 위험군 비율은 어떠한가?\n• 과의존이 심한 연령대는 어디이며 그 원인은 무엇인가?\n• 스마트폰 과의존 문제를 해결하기 위한 방안은 무엇인가?", plain:"다음을 참고하여 '스마트폰 과의존 실태'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령별 스마트폰 과의존 위험군 비율은 어떠한가?\n• 과의존이 심한 연령대는 어디이며 그 원인은 무엇인가?\n• 스마트폰 과의존 문제를 해결하기 위한 방안은 무엇인가?" },
+  ],
+  5: [
+    { exam:"제47회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"경쟁은 우리 사회에 어떤 영향을 미치는가?\"</strong>\n\n아래의 내용을 중심으로 '경쟁'에 대한 자신의 생각을 쓰시오.\n• 우리 사회에서 경쟁은 어떻게 나타나는가?\n• 경쟁의 긍정적인 면과 부정적인 면은 무엇인가?\n• 바람직한 경쟁이 이루어지기 위해 어떻게 해야 하는가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"경쟁은 우리 사회에 어떤 영향을 미치는가?\"\n\n아래의 내용을 중심으로 '경쟁'에 대한 자신의 생각을 쓰시오.\n• 우리 사회에서 경쟁은 어떻게 나타나는가?\n• 경쟁의 긍정적인 면과 부정적인 면은 무엇인가?\n• 바람직한 경쟁이 이루어지기 위해 어떻게 해야 하는가?" },
+    { exam:"제52회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 가족의 의미는 어떻게 변화하고 있는가?\"</strong>\n\n아래의 내용을 중심으로 '가족'에 대한 자신의 생각을 쓰시오.\n• 현대 사회에서 가족의 형태는 어떻게 변화하고 있는가?\n• 가족 관계의 변화가 개인과 사회에 미치는 영향은 무엇인가?\n• 건강한 가족 관계를 유지하기 위해 어떤 노력이 필요한가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 가족의 의미는 어떻게 변화하고 있는가?\"\n\n아래의 내용을 중심으로 '가족'에 대한 자신의 생각을 쓰시오.\n• 현대 사회에서 가족의 형태는 어떻게 변화하고 있는가?\n• 가족 관계의 변화가 개인과 사회에 미치는 영향은 무엇인가?\n• 건강한 가족 관계를 유지하기 위해 어떤 노력이 필요한가?" },
+    { exam:"제60회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 악기 교육의 필요성\"</strong>\n\n아래의 내용을 중심으로 '악기 교육'에 대한 자신의 생각을 쓰시오.\n• 악기 교육이 개인의 발달에 어떤 영향을 미치는가?\n• 현대 사회에서 악기 교육이 중요한 이유는 무엇인가?\n• 악기 교육을 활성화하기 위해 어떤 방안이 필요한가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 악기 교육의 필요성\"\n\n아래의 내용을 중심으로 '악기 교육'에 대한 자신의 생각을 쓰시오.\n• 악기 교육이 개인의 발달에 어떤 영향을 미치는가?\n• 현대 사회에서 악기 교육이 중요한 이유는 무엇인가?\n• 악기 교육을 활성화하기 위해 어떤 방안이 필요한가?" },
+    { exam:"제64회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 인터넷 실명제의 필요성\"</strong>\n\n아래의 내용을 중심으로 '인터넷 실명제'에 대한 자신의 생각을 쓰시오.\n• 인터넷 실명제가 필요한 이유는 무엇인가?\n• 인터넷 실명제 시행 시 예상되는 문제점은 무엇인가?\n• 인터넷에서의 바람직한 의사소통을 위해 어떻게 해야 하는가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 인터넷 실명제의 필요성\"\n\n아래의 내용을 중심으로 '인터넷 실명제'에 대한 자신의 생각을 쓰시오.\n• 인터넷 실명제가 필요한 이유는 무엇인가?\n• 인터넷 실명제 시행 시 예상되는 문제점은 무엇인가?\n• 인터넷에서의 바람직한 의사소통을 위해 어떻게 해야 하는가?" },
+    { exam:"제83회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 저출산 문제와 해결 방안\"</strong>\n\n아래의 내용을 중심으로 '저출산'에 대한 자신의 생각을 쓰시오.\n• 저출산 현상이 심화되는 원인은 무엇인가?\n• 저출산이 사회에 미치는 영향은 무엇인가?\n• 저출산 문제를 해결하기 위해 개인과 사회는 어떻게 해야 하는가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 저출산 문제와 해결 방안\"\n\n아래의 내용을 중심으로 '저출산'에 대한 자신의 생각을 쓰시오.\n• 저출산 현상이 심화되는 원인은 무엇인가?\n• 저출산이 사회에 미치는 영향은 무엇인가?\n• 저출산 문제를 해결하기 위해 개인과 사회는 어떻게 해야 하는가?" },
+    { exam:"제91회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"인공지능 기술 발전이 인간의 삶에 미치는 영향\"</strong>\n\n아래의 내용을 중심으로 '인공지능'에 대한 자신의 생각을 쓰시오.\n• 인공지능 기술은 우리 생활에 어떻게 활용되고 있는가?\n• 인공지능 발전의 긍정적 측면과 부정적 측면은 무엇인가?\n• 인공지능과 인간이 바람직하게 공존하기 위해 어떻게 해야 하는가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"인공지능 기술 발전이 인간의 삶에 미치는 영향\"\n\n아래의 내용을 중심으로 '인공지능'에 대한 자신의 생각을 쓰시오.\n• 인공지능 기술은 우리 생활에 어떻게 활용되고 있는가?\n• 인공지능 발전의 긍정적 측면과 부정적 측면은 무엇인가?\n• 인공지능과 인간이 바람직하게 공존하기 위해 어떻게 해야 하는가?" },
+    { exam:"제96회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 자원봉사 활동의 의미와 역할\"</strong>\n\n아래의 내용을 중심으로 '자원봉사'에 대한 자신의 생각을 쓰시오.\n• 자원봉사 활동이 개인에게 미치는 영향은 무엇인가?\n• 자원봉사 활동이 사회에 미치는 영향은 무엇인가?\n• 자원봉사 활동을 활성화하기 위한 방안은 무엇인가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 자원봉사 활동의 의미와 역할\"\n\n아래의 내용을 중심으로 '자원봉사'에 대한 자신의 생각을 쓰시오.\n• 자원봉사 활동이 개인에게 미치는 영향은 무엇인가?\n• 자원봉사 활동이 사회에 미치는 영향은 무엇인가?\n• 자원봉사 활동을 활성화하기 위한 방안은 무엇인가?" },
+    { exam:"제102회", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n최근 식당이나 병원, 은행에서도 디지털 기기를 사용하고 있습니다. 그런데 디지털 기기에서 소외되는 사람이 있습니다. 아래의 내용을 중심으로 <strong>'디지털 소외 문제와 해결 방안'</strong>에 대해 자신의 생각을 쓰시오.\n\n• 디지털 기술을 어떻게 활용하고 있는가?\n• 디지털 소외되는 사람은 누구인가? 왜 소외되는가?\n• 디지털 소외 문제를 해결하기 위해 개인과 사회는 어떻게 해야 하는가?", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n최근 식당이나 병원, 은행에서도 디지털 기기를 사용하고 있습니다. 그런데 디지털 기기에서 소외되는 사람이 있습니다. 아래의 내용을 중심으로 '디지털 소외 문제와 해결 방안'에 대해 자신의 생각을 쓰시오.\n\n• 디지털 기술을 어떻게 활용하고 있는가?\n• 디지털 소외되는 사람은 누구인가? 왜 소외되는가?\n• 디지털 소외 문제를 해결하기 위해 개인과 사회는 어떻게 해야 하는가?" },
+    { exam:"연습문제", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"현대 사회에서 개인 정보 보호와 편의성 중 어느 것이 더 중요한가?\"</strong>\n\n아래의 내용을 중심으로 논술하시오.\n• 개인 정보 보호의 필요성\n• 편의성을 위해 정보를 공유하는 현실\n• 두 가지 가치의 균형을 위한 방안", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"현대 사회에서 개인 정보 보호와 편의성 중 어느 것이 더 중요한가?\"\n\n아래의 내용을 중심으로 논술하시오.\n• 개인 정보 보호의 필요성\n• 편의성을 위해 정보를 공유하는 현실\n• 두 가지 가치의 균형을 위한 방안" },
+    { exam:"연습문제", q:"Q54 (600–700자)", text:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오. (단, 문제를 그대로 옮겨 쓰지 마시오.)\n\n<strong>\"SNS의 발달이 현대인의 인간관계에 미치는 영향\"</strong>\n\n아래의 내용을 중심으로 논술하시오.\n• SNS가 인간관계에 미치는 긍정적 영향\n• SNS가 인간관계에 미치는 부정적 영향\n• 바람직한 SNS 사용 방법", plain:"다음을 주제로 하여 자신의 생각을 600자 이상 700자 이하로 쓰시오.\n\n\"SNS의 발달이 현대인의 인간관계에 미치는 영향\"\n\n아래의 내용을 중심으로 논술하시오.\n• SNS가 인간관계에 미치는 긍정적 영향\n• SNS가 인간관계에 미치는 부정적 영향\n• 바람직한 SNS 사용 방법" },
+  ]
+};
+
+// ── Mode switching ─────────────────────────────────────────────
+function switchMode(mode) {
+  currentMode = mode;
+  cfEvent('mode_switched', { mode });
+  document.querySelectorAll('.mode-tab').forEach((t, i) => {
+    t.classList.toggle('active', ['q53','q54','free','q5152'][i] === mode);
+  });
+  document.getElementById('promptSection').style.display = (mode === 'q53' || mode === 'q54') ? '' : 'none';
+  document.getElementById('mobilePromptCard').style.display = (mode === 'q53' || mode === 'q54') ? '' : 'none';
+  document.getElementById('freeWriteSection').style.display = mode === 'free' ? '' : 'none';
+  document.getElementById('q5152Section').style.display = mode === 'q5152' ? '' : 'none';
+  document.getElementById('gridControls').style.display = mode === 'q5152' ? 'none' : '';
+  firedMilestones = new Set();
+  if (mode === 'q53') { currentLevel = 3; setTarget(document.querySelector('[data-min="150"]')); showPrompt(); }
+  else if (mode === 'q54') { currentLevel = 5; setTarget(document.querySelector('[data-min="600"]')); showPrompt(); }
+  else if (mode === 'free') { targetMin = 0; targetMax = 99999; document.getElementById('targetDisplay').textContent = '∞'; document.getElementById('remaining').textContent = '∞'; document.getElementById('targetLimits').style.display = 'none'; ROWS = 40; TOTAL = COLS * ROWS; buildGrid(); }
+  else if (mode === 'q5152') { loadQ5152(); }
+}
+
+// ── Streak ─────────────────────────────────────────────────────
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+function loadStreak() {
+  try {
+    const last = localStorage.getItem('wongoji_last_practice');
+    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (last === getTodayStr() || last === yesterday) return streak;
+    return 0;
+  } catch { return 0; }
+}
+function saveStreak() {
+  try {
+    const last = localStorage.getItem('wongoji_last_practice');
+    const streak = parseInt(localStorage.getItem('wongoji_streak') || '0');
+    const today = getTodayStr();
+    const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (last === today) return streak;
+    const newStreak = last === yesterday ? streak + 1 : 1;
+    localStorage.setItem('wongoji_streak', newStreak);
+    localStorage.setItem('wongoji_last_practice', today);
+    return newStreak;
+  } catch { return 1; }
+}
+function updateStreakDisplay(count) { document.getElementById('streakCount').textContent = count; }
+function showStreakModal(count) {
+  document.getElementById('modalStreakCount').textContent = count;
+  const msgs = ["Great job practicing today!", "Two days in a row! Consistency is key.", "Three days strong!", "Four days! Most learners give up here.", "Five days! Real habit forming.", "One week! Share on r/Korean!"];
+  document.getElementById('modalStreakMsg').textContent = count >= 7 ? `${count} days! 정말 대단합니다!` : msgs[Math.min(count-1, msgs.length-1)];
+  document.getElementById('streakModal').classList.add('show');
+  cfEvent('streak_fired', { streak: count, mode: currentMode });
+}
+function closeStreakModal() { document.getElementById('streakModal').classList.remove('show'); }
+function checkSessionComplete() {
+  if (sessionMarked) return;
+  const written = content.filter(c => c !== '').length;
+  if (written >= 50) { sessionMarked = true; const s = saveStreak(); updateStreakDisplay(s); showStreakModal(s); }
+}
+
+// ── Timer ──────────────────────────────────────────────────────
+function formatTime(s) { return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+function updateTimerDisplay() {
+  const el = document.getElementById('timerDisplay'), fill = document.getElementById('timerFill');
+  el.textContent = formatTime(timerLeft);
+  fill.style.width = (timerLeft/timerTotal*100) + '%';
+  el.className = 'timer-display' + (timerLeft===0?' done':timerLeft<=timerTotal*0.2?' warning':'');
+  fill.className = 'timer-progress-fill' + (timerLeft<=timerTotal*0.2?' warning':'');
+  updateMobileStickyBar();
+}
+function updateJPM() {
+  if (!timerRunning || timerElapsed < 10) return;
+  const written = content.filter(c => c !== '').length;
+  document.getElementById('jpmValue').textContent = Math.round((written/timerElapsed)*60);
+  document.getElementById('jpmDisplay').classList.add('show');
+}
+function startTimer() {
+  if (timerRunning) return;
+  timerRunning = true;
+  cfEvent('timer_started', { preset_seconds: timerTotal, mode: currentMode });
+  document.getElementById('timerStartBtn').style.display = 'none';
+  document.getElementById('timerPauseBtn').style.display = '';
+  updateMobileStickyBar();
+  timerInterval = setInterval(() => {
+    if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning=false; document.getElementById('timerStartBtn').style.display=''; document.getElementById('timerPauseBtn').style.display='none'; updateTimerDisplay(); cfEvent('timer_completed', { mode: currentMode }); return; }
+    timerLeft--; timerElapsed++; updateTimerDisplay(); updateJPM();
+  }, 1000);
+}
+function pauseTimer() { clearInterval(timerInterval); timerRunning=false; document.getElementById('timerStartBtn').style.display=''; document.getElementById('timerPauseBtn').style.display='none'; updateMobileStickyBar(); }
+function resetTimer() { clearInterval(timerInterval); timerRunning=false; timerLeft=timerTotal; timerElapsed=0; document.getElementById('timerStartBtn').style.display=''; document.getElementById('timerPauseBtn').style.display='none'; document.getElementById('jpmDisplay').classList.remove('show'); updateTimerDisplay(); }
+function setTimerPreset(el) {
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); pauseTimer();
+  timerTotal=parseInt(el.dataset.seconds); timerLeft=timerTotal; timerElapsed=0;
+  document.getElementById('jpmDisplay').classList.remove('show');
+  updateTimerDisplay();
+  cfEvent('timer_preset_selected', { preset_seconds: timerTotal });
+}
+
+// ── Prompt display ─────────────────────────────────────────────
+function getCurrentPromptPlain() { return prompts[currentLevel][promptIndex[currentLevel]].plain; }
+
+async function translatePrompt(lang) {
+  const text = getCurrentPromptPlain();
+  const key = `${lang}::${text.slice(0,40)}`;
+  if (tlCache[key]) { showTranslation(lang, tlCache[key]); return; }
+  document.getElementById('translationBox').classList.add('show');
+  document.getElementById('tlLabel').textContent = LANG_NAMES[lang] + ' — Prompt translation';
+  document.getElementById('tlText').innerHTML = '<span class="tl-loading">Translating...</span>';
+  const langCode = MYMEMORY_CODES[lang] || 'en';
+  try {
+    const translated = await Promise.all(text.split('\n').map(async line => {
+      if (!line.trim()) return '';
+      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(line)}&langpair=ko|${langCode}`);
+      const data = await res.json();
+      return data?.responseData?.translatedText || line;
+    }));
+    const result = translated.join('\n');
+    tlCache[key] = result;
+    showTranslation(lang, result);
+    cfEvent('prompt_translated', { lang, mode: currentMode });
+  } catch { document.getElementById('tlText').innerHTML = '<span style="color:#991b1b;">Translation failed.</span>'; }
+}
+function showTranslation(lang, text) { document.getElementById('tlLabel').textContent = LANG_NAMES[lang] + ' — Prompt translation'; document.getElementById('tlText').innerHTML = text.replace(/\n/g,'<br>'); document.getElementById('translationBox').classList.add('show'); }
+function hideTranslation() { document.getElementById('translationBox').classList.remove('show'); }
+function handleLangChange() { currentLang = document.getElementById('langSelect').value; document.getElementById('mobileLangSelect').value = currentLang; if (!currentLang) { hideTranslation(); return; } translatePrompt(currentLang); }
+
+function showPrompt() {
+  const pool = prompts[currentLevel], idx = promptIndex[currentLevel], p = pool[idx];
+  const examLabel = p.exam ? `<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-right:8px;">${p.exam}</span>` : "";
+  document.getElementById('promptText').innerHTML = `${examLabel}<strong>${p.q}</strong><br><br>${p.text.replace(/\n/g,'<br>')}`;
+  document.getElementById('promptCounter').textContent = `${idx+1} / ${pool.length}`;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === pool.length-1;
+  if (currentLang) translatePrompt(currentLang); else hideTranslation();
+  updateMobilePromptCard();
+}
+function nextPrompt() { if (promptIndex[currentLevel] < prompts[currentLevel].length-1) { promptIndex[currentLevel]++; showPrompt(); cfEvent('prompt_navigated', { mode: currentMode, index: promptIndex[currentLevel] }); } }
+function prevPrompt() { if (promptIndex[currentLevel] > 0) { promptIndex[currentLevel]--; showPrompt(); cfEvent('prompt_navigated', { mode: currentMode, index: promptIndex[currentLevel] }); } }
+
+// ── Grid ───────────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('wongoji');
+  grid.innerHTML = ''; cells = []; content = Array(TOTAL).fill('');
+  for (let i = 0; i < TOTAL; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell'; cell.dataset.index = i;
+    if (i % COLS === 0) { cell.classList.add('row-start'); cell.dataset.row = Math.floor(i/COLS)+1; }
+    cell.addEventListener('mousedown', (e) => { e.preventDefault(); if(!isMobile){commitNumPending(); setActiveCell(i);} });
+    grid.appendChild(cell); cells.push(cell);
+  }
+  content[0] = ' '; cells[0].classList.add('indent'); renderCell(0);
+  if (!isMobile) setActiveCell(1);
+  updateStats();
+}
+
+function setActiveCell(idx) {
+  if (idx < 0 || idx >= TOTAL) return;
+  cells[activeCellIndex]?.classList.remove('active');
+  activeCellIndex = idx;
+  cells[activeCellIndex].classList.add('active');
+  cells[activeCellIndex].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const sx = window.scrollX, sy = window.scrollY;
+  const inp = document.getElementById('hiddenInput');
+  inp.value = ''; inp.focus({ preventScroll: true });
+  window.scrollTo(sx, sy);
+}
+
+function renderCell(idx) {
+  const cell = cells[idx]; if (!cell) return;
+  const ch = content[idx];
+  cell.textContent = ch || '';
+  cell.classList.remove('error','num','num-pending');
+  if (ch && /^\d{2}$/.test(ch)) cell.classList.add('num');
+}
+
+function updateStats() {
+  const written = content.filter(c=>c!=='').length;
+  const pct = currentMode === 'free' ? Math.min((written/200)*100,100) : Math.min((written/targetMax)*100,100);
+  document.getElementById('charCount').textContent = written;
+  checkMilestones(written);
+  if (currentMode === 'free') {
+    document.getElementById('remaining').textContent = '∞';
+    document.getElementById('statusDisplay').textContent = written > 0 ? '✓ Writing!' : '시작!';
+    document.getElementById('statusDisplay').className = 'stat-value' + (written > 0 ? ' good' : '');
+    document.getElementById('progressFill').style.width = pct + '%';
+    updateMobileStickyBar();
+    return;
+  }
+  const remEl = document.getElementById('remaining');
+  remEl.textContent = Math.max(0, targetMax-written);
+  remEl.className = 'stat-value' + (written>targetMax?' warning':written>=targetMin?' good':'');
+  const statusEl = document.getElementById('statusDisplay'), fillEl = document.getElementById('progressFill');
+  if (written===0) { statusEl.textContent='시작!'; statusEl.className='stat-value'; fillEl.className='progress-fill'; }
+  else if (written<targetMin) { statusEl.textContent=`+${targetMin-written}자 more`; statusEl.className='stat-value'; fillEl.className='progress-fill'; }
+  else if (written<=targetMax) { statusEl.textContent='✓ In range!'; statusEl.className='stat-value good'; fillEl.className='progress-fill'; }
+  else { statusEl.textContent=`${written-targetMax}자 over!`; statusEl.className='stat-value warning'; fillEl.className='progress-fill over'; }
+  fillEl.style.width = pct + '%';
+  updateMobileStickyBar();
+  checkSessionComplete();
+}
+
+function validateAndFixPunctuation(idx) {
+  const col = idx % COLS, ch = content[idx];
+  if (col === 0 && ch && PUNCTUATION.includes(ch)) {
+    const prev = idx - 1;
+    if (prev >= 0) { content[prev]=ch; renderCell(prev); content[idx]=''; renderCell(idx); showMsg('info','💡 Punctuation auto-moved to end of previous line (Rule #4).'); setActiveCell(idx+1<TOTAL?idx+1:idx); return true; }
+  }
+  clearMsg(); return false;
+}
+
+function showMsg(type, text) { const cls=type==='error'?'error-msg':type==='success'?'success-msg':'info-msg'; document.getElementById('errorLog').innerHTML=`<div class="${cls}">${text}</div>`; }
+function clearMsg() { document.getElementById('errorLog').innerHTML=''; }
+function isDigit(ch) { return /^\d$/.test(ch); }
+
+function commitNumPending() {
+  if (!numPending) return;
+  content[numCell]=numFirst; renderCell(numCell);
+  numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats();
+}
+
+function handleDigit(d) {
+  if (!numPending) { numPending=true; numFirst=d; numCell=activeCellIndex; cells[numCell].textContent=d; cells[numCell].classList.add('num-pending'); showMsg('info',`💡 Rule #5: Type second digit to pair, or Space/Enter to commit "${d}" alone.`); }
+  else { const paired=numFirst+d; content[numCell]=paired; cells[numCell].classList.remove('num-pending'); renderCell(numCell); const next=numCell+1; numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats(); setActiveCell(Math.min(next,TOTAL-1)); }
+}
+
+// ── Desktop keyboard input ─────────────────────────────────────
+const hiddenInput = document.getElementById('hiddenInput');
+hiddenInput.addEventListener('compositionstart', ()=>{ isComposing=true; commitNumPending(); });
+hiddenInput.addEventListener('compositionupdate', (e)=>{ if(cells[activeCellIndex]){cells[activeCellIndex].textContent=e.data; cells[activeCellIndex].style.color='#3b82f6';} });
+hiddenInput.addEventListener('compositionend', (e)=>{
+  isComposing=false;
+  if(cells[activeCellIndex]) cells[activeCellIndex].style.color='';
+  const final=e.data;
+  if(final) { [...final].forEach((ch,i,arr)=>{ if(activeCellIndex<TOTAL){content[activeCellIndex]=ch; renderCell(activeCellIndex); validateAndFixPunctuation(activeCellIndex); if(i<arr.length-1) activeCellIndex++;} }); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1)); }
+  hiddenInput.value=''; updateStats();
+});
+hiddenInput.addEventListener('keydown', (e)=>{
+  if(isComposing) return;
+  if(e.key==='Backspace'){ e.preventDefault(); if(numPending){cells[numCell].textContent=''; cells[numCell].classList.remove('num-pending'); numPending=false; numFirst=''; numCell=-1; clearMsg(); return;} if(content[activeCellIndex]){content[activeCellIndex]=''; renderCell(activeCellIndex);} else if(activeCellIndex>0){setActiveCell(activeCellIndex-1); content[activeCellIndex]=''; renderCell(activeCellIndex);} clearMsg(); updateStats(); return; }
+  const nav={ArrowRight:1,ArrowLeft:-1,ArrowDown:COLS,ArrowUp:-COLS};
+  if(nav[e.key]!==undefined){e.preventDefault(); commitNumPending(); setActiveCell(activeCellIndex+nav[e.key]); return;}
+  if(e.key===' '){e.preventDefault(); commitNumPending(); content[activeCellIndex]=' '; renderCell(activeCellIndex); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1)); updateStats(); return;}
+  if(e.key==='Enter'){e.preventDefault(); commitNumPending(); const next=(Math.floor(activeCellIndex/COLS)+1)*COLS; if(next<TOTAL){content[next]=' '; cells[next].classList.add('indent'); renderCell(next); setActiveCell(next+1);} updateStats(); return;}
+});
+hiddenInput.addEventListener('input', (e)=>{
+  if(isComposing) return;
+  const val=hiddenInput.value; hiddenInput.value=''; if(!val) return;
+  for(const ch of [...val]){ if(isDigit(ch)){handleDigit(ch);} else{commitNumPending(); if(activeCellIndex<TOTAL){content[activeCellIndex]=ch; renderCell(activeCellIndex); validateAndFixPunctuation(activeCellIndex); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1));}} }
+  updateStats();
+});
+
+// ── Grid actions ───────────────────────────────────────────────
+function clearGrid() {
+  commitNumPending(); sessionMarked=false; firedMilestones=new Set();
+  content=Array(TOTAL).fill('');
+  cells.forEach((c,i)=>{ c.textContent=''; c.className='cell'; c.style.color=''; if(i%COLS===0){c.classList.add('row-start');c.dataset.row=Math.floor(i/COLS)+1;} });
+  clearMsg(); content[0]=' '; cells[0].classList.add('indent'); renderCell(0);
+  if(!isMobile) setActiveCell(1);
+  if(isMobile) document.getElementById('mobileTextarea').value='';
+  updateStats();
+}
+
+function setTarget(el) {
+  if(!el) return;
+  document.querySelectorAll('.limit-tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  targetMin=parseInt(el.dataset.min); targetMax=parseInt(el.dataset.max);
+  document.getElementById('targetDisplay').textContent=`${targetMin}–${targetMax}`;
+  document.getElementById('remaining').textContent=targetMax;
+  document.getElementById('targetLimits').style.display='';
+  ROWS=targetMax<=300?16:37; TOTAL=COLS*ROWS; buildGrid();
+}
+
+function exportPNG() {
+  const written=content.filter(c=>c!=='').length;
+  if(written<5){showMsg('info','💡 Write something first before exporting!'); return;}
+  cfEvent('export_png', { chars: written, mode: currentMode });
+  const CELL_SIZE=40,PADDING=40,HEADER_H=60;
+  const usedRows=Math.min(Math.max(Math.ceil(written/COLS)+2,5),ROWS);
+  const canvas=document.getElementById('exportCanvas');
+  canvas.width=COLS*CELL_SIZE+PADDING*2; canvas.height=usedRows*CELL_SIZE+PADDING*2+HEADER_H+30;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#1a1a2e'; ctx.fillRect(0,0,canvas.width,HEADER_H);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 18px sans-serif'; ctx.textAlign='left';
+  ctx.fillText('원고지 練習 · Wongoji Practice',PADDING,28);
+  ctx.font='12px sans-serif'; ctx.fillStyle='#aaaaaa';
+  const modeLabel=currentMode==='free'?'Free Write':prompts[currentLevel][promptIndex[currentLevel]].q;
+  ctx.fillText(`${modeLabel} · wongoji.com`,PADDING,48);
+  const startX=PADDING,startY=HEADER_H+PADDING/2;
+  ctx.strokeStyle='#bbbbbb'; ctx.lineWidth=1;
+  for(let row=0;row<usedRows;row++){for(let col=0;col<COLS;col++){const x=startX+col*CELL_SIZE,y=startY+row*CELL_SIZE,ch=content[row*COLS+col]||''; ctx.fillStyle=ch===' '&&col===0?'#f5f5f5':'#ffffff'; ctx.fillRect(x,y,CELL_SIZE,CELL_SIZE); ctx.strokeRect(x,y,CELL_SIZE,CELL_SIZE); if(ch&&ch!==' '){ctx.fillStyle='#2c2c2c'; ctx.font=`${/^\d{2}$/.test(ch)?11:16}px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(ch,x+CELL_SIZE/2,y+CELL_SIZE/2);}}}
+  ctx.strokeStyle='#2c2c2c'; ctx.lineWidth=2; ctx.strokeRect(startX,startY,COLS*CELL_SIZE,usedRows*CELL_SIZE);
+  ctx.fillStyle='#888'; ctx.font='11px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.fillText(`${written}자 written · wongoji.com`,startX,startY+usedRows*CELL_SIZE+18);
+  const link=document.createElement('a'); link.download=`wongoji_${getTodayStr()}.png`; link.href=canvas.toDataURL('image/png'); link.click();
+  showMsg('success','✅ Image downloaded! Share on Reddit r/WriteStreakKorean for feedback.');
+}
+
+function copyText() {
+  const rows=[];
+  for(let r=0;r<ROWS;r++){let row=''; for(let c=0;c<COLS;c++) row+=content[r*COLS+c]||' '; if(row.trim()) rows.push(row);}
+  const text=rows.join('\n');
+  if(!text.trim()){showMsg('info','💡 Write something first!'); return;}
+  cfEvent('copy_text', { chars: content.filter(c=>c!=='').length, mode: currentMode });
+  navigator.clipboard.writeText(text).then(()=>showMsg('success','✅ Copied to clipboard!')).catch(()=>showMsg('error','⚠️ Copy failed.'));
+}
+
+function toggleExport() { const c=document.getElementById('exportContent'),a=document.getElementById('exportArrow'); c.classList.toggle('open'); a.textContent=c.classList.contains('open')?'▲':'▼'; }
+function toggleRules() { const c=document.getElementById('rulesContent'),a=document.getElementById('rulesArrow'); c.classList.toggle('open'); a.textContent=c.classList.contains('open')?'▲':'▼'; if(c.classList.contains('open')) cfEvent('rules_opened',{}); }
+
+// ── Init ───────────────────────────────────────────────────────
+detectMobile();
+updateStreakDisplay(loadStreak());
+buildGrid();
+showPrompt();
+updateTimerDisplay();
+setupMobileInput();
+
+document.addEventListener('click', (e)=>{
+  if(isMobile) return;
+  if(!e.target.closest('.rules-toggle')&&!e.target.closest('.export-toggle')&&!e.target.closest('select')&&!e.target.closest('button')&&!e.target.closest('.nav-btn')&&!e.target.closest('.lang-select')&&!e.target.closest('.preset-btn')&&!e.target.closest('.timer-btn')&&!e.target.closest('.streak-modal')&&!e.target.closest('.mode-tab')){
+    const sx=window.scrollX,sy=window.scrollY;
+    hiddenInput.focus({preventScroll:true});
+    window.scrollTo(sx,sy);
+  }
+});
+</script>
+</body>
+</html>  .prompt-korean { font-size: 15px; line-height: 1.7; color: #333; }
   .prompt-korean strong { color: #1a1a2e; }
   .free-write-header { background: white; border-left: 4px solid #2a9d8f; padding: 16px 20px; margin-bottom: 20px; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .free-write-header h2 { font-size: 16px; color: #1a1a2e; margin-bottom: 4px; }
