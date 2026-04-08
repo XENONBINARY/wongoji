@@ -176,8 +176,7 @@
 <div class="container">
 
   <div class="mode-tabs">
-    <button class="mode-tab active" onclick="switchMode('q53')">Q53 Practice</button>
-    <button class="mode-tab" onclick="switchMode('q54')">Q54 Practice</button>
+    <button class="mode-tab active" onclick="switchMode('q54')">Q54 Practice</button>
     <button class="mode-tab" onclick="switchMode('free')">Free Write</button>
     <button class="mode-tab" onclick="switchMode('q5152')">Q51 / Q52</button>
   </div>
@@ -262,8 +261,7 @@
       <button class="secondary" onclick="clearGrid()">Clear Essay</button>
       <div class="topik-limits" id="targetLimits">
         <span style="font-size:12px;color:#888;">Target:</span>
-        <div class="limit-tag active" id="q53tag" data-min="150" data-max="300" onclick="setTarget(this)">Q53: 150–300자</div>
-        <div class="limit-tag" id="q54tag" data-min="600" data-max="700" onclick="setTarget(this)">Q54: 600–700자</div>
+        <div class="limit-tag active" id="q54tag" data-min="600" data-max="700" onclick="setTarget(this)">Q54: 600–700자</div>
       </div>
     </div>
 
@@ -278,8 +276,7 @@
       </div>
       <div class="timer-presets">
         <span style="font-size:11px;color:#aaa;">Preset:</span>
-        <div class="preset-btn active" data-seconds="1200" onclick="setTimerPreset(this)">Q53 — 20 min</div>
-        <div class="preset-btn" data-seconds="3000" onclick="setTimerPreset(this)">Q54 — 50 min</div>
+        <div class="preset-btn active" data-seconds="3000" onclick="setTimerPreset(this)">Q54 — 50 min</div>
         <div class="preset-btn" data-seconds="600" onclick="setTimerPreset(this)">Quick — 10 min</div>
       </div>
       <div class="timer-progress" style="flex-basis:100%">
@@ -336,7 +333,7 @@
       <div class="rule"><div class="rule-num">3</div><div class="rule-text"><strong>Paragraph indent.</strong> Leave the first box of each paragraph empty. Press Enter to auto-indent.</div></div>
       <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation.</strong> One mark per box. <strong>No punctuation at the start of a line</strong> — the app will automatically move it to the last box of the previous line.</div></div>
       <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers: 2 digits per box.</strong> Pair digits left to right: <strong>20 → [20]</strong>, <strong>365 → [36][5]</strong>, <strong>2012 → [20][12]</strong>. Letters (Korean or alphabet) each get their own box. In essays, numbers over 99 are usually written in Korean words (삼백육십오) instead. Percentages and ages stay as digits: 50%, 20대.</div></div>
-      <div class="rule"><div class="rule-num">6</div><div class="rule-text"><strong>Character limits.</strong> Q53: 150–300자 (–5pts per 100자 over/under). Q54: 600–700자. Stay within range!</div></div>
+      <div class="rule"><div class="rule-num">6</div><div class="rule-text"><strong>Character limits.</strong> Q54: 600–700자 (points deducted outside range). 고급 Q44: 700–800자. Stay within range!</div></div>
       <div class="rule"><div class="rule-num">7</div><div class="rule-text"><strong>No title.</strong> Begin your essay directly — no title line.</div></div>
     </div>
   </div>
@@ -387,14 +384,14 @@ const MYMEMORY_CODES = { en:'en', zh:'zh-CN', ja:'ja', vi:'vi', mn:'mn', uz:'uz'
 let ROWS = 16, TOTAL = COLS * ROWS;
 let cells = [], content = [];
 let activeCellIndex = 0;
-let currentLevel = 3, targetMin = 150, targetMax = 300;
-let currentMode = 'q53';
-let promptIndex = { 3: 0, 5: 0 };
+let currentLevel = 5, targetMin = 600, targetMax = 700;
+let currentMode = 'q54';
+let promptIndex = { 5: 0 };
 let isComposing = false;
 let numPending = false, numFirst = '', numCell = -1;
 let currentLang = '', tlCache = {};
 let isMobile = false;
-let timerTotal = 1200, timerLeft = 1200, timerRunning = false, timerInterval = null, timerElapsed = 0;
+let timerTotal = 3000, timerLeft = 3000, timerRunning = false, timerInterval = null, timerElapsed = 0;
 let sessionMarked = false;
 
 function detectMobile() {
@@ -436,31 +433,6 @@ function setupMobileInput() {
 }
 
 const prompts = {
-  3: [
-    // ── Q53 past exam prompts ─────────────────────────────────
-    // Q53 format: describe/analyse a chart or survey result (150–300자)
-    // Note: The actual exam shows a graph/table. These text prompts
-    // describe the data scenario as practice without the visual.
-
-    { exam:"제47회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'현대인의 독서 습관 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 성인의 독서량이 10년간 어떻게 변화했는가?\n• 독서가 감소하는 주요 원인 두 가지는 무엇인가?\n• 독서 감소로 인해 예상되는 문제는 무엇인가?", plain:"다음을 참고하여 '현대인의 독서 습관 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 성인의 독서량이 10년간 어떻게 변화했는가?\n• 독서가 감소하는 주요 원인 두 가지는 무엇인가?\n• 독서 감소로 인해 예상되는 문제는 무엇인가?" },
-
-    { exam:"제52회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'아이를 꼭 낳아야 하는가'</strong>에 대한 조사 결과를 설명하는 글을 200자 이상 300자 이하로 쓰시오.\n\n• 남성과 여성의 응답 비율(그렇다/아니다)은 어떠한가?\n• 성별에 따라 인식 차이가 나타나는가?\n• '아니다'라고 응답한 주요 이유 두 가지는 무엇인가?", plain:"다음을 참고하여 '아이를 꼭 낳아야 하는가'에 대한 조사 결과를 설명하는 글을 200자 이상 300자 이하로 쓰시오.\n\n• 남성과 여성의 응답 비율(그렇다/아니다)은 어떠한가?\n• 성별에 따라 인식 차이가 나타나는가?\n• '아니다'라고 응답한 주요 이유 두 가지는 무엇인가?" },
-
-    { exam:"제60회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'고등학생 독서량 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 고등학생의 연간 독서량은 최근 몇 년간 어떻게 변화했는가?\n• 변화의 주요 원인 두 가지는 무엇인가?\n• 이에 따른 대책으로 무엇을 제안할 수 있는가?", plain:"다음을 참고하여 '고등학생 독서량 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 고등학생의 연간 독서량은 최근 몇 년간 어떻게 변화했는가?\n• 변화의 주요 원인 두 가지는 무엇인가?\n• 이에 따른 대책으로 무엇을 제안할 수 있는가?" },
-
-    { exam:"제64회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'한국인의 여가 활동 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 한국인의 주요 여가 활동이 과거와 현재 어떻게 달라졌는가?\n• 변화의 원인 두 가지는 무엇인가?\n• 이러한 변화가 사회에 미치는 영향은 무엇인가?", plain:"다음을 참고하여 '한국인의 여가 활동 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 한국인의 주요 여가 활동이 과거와 현재 어떻게 달라졌는가?\n• 변화의 원인 두 가지는 무엇인가?\n• 이러한 변화가 사회에 미치는 영향은 무엇인가?" },
-
-    { exam:"제83회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'한국의 합계출산율과 고령인구 비율 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 합계출산율과 고령인구 비율은 각각 어떻게 변화했는가?\n• 두 지표 사이에 어떤 관계가 있는가?\n• 이러한 변화의 원인 두 가지는 무엇인가?", plain:"다음을 참고하여 '한국의 합계출산율과 고령인구 비율 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 합계출산율과 고령인구 비율은 각각 어떻게 변화했는가?\n• 두 지표 사이에 어떤 관계가 있는가?\n• 이러한 변화의 원인 두 가지는 무엇인가?" },
-
-    { exam:"제91회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'1인 가구 증가 현황'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 1인 가구의 비율이 연도별로 어떻게 변화했는가?\n• 1인 가구가 증가하는 주요 원인 두 가지는 무엇인가?\n• 1인 가구 증가로 인한 사회적 변화는 무엇인가?", plain:"다음을 참고하여 '1인 가구 증가 현황'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 1인 가구의 비율이 연도별로 어떻게 변화했는가?\n• 1인 가구가 증가하는 주요 원인 두 가지는 무엇인가?\n• 1인 가구 증가로 인한 사회적 변화는 무엇인가?" },
-
-    { exam:"제96회", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'온라인 쇼핑 이용 현황'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령대별 온라인 쇼핑 이용률은 어떠한가?\n• 온라인 쇼핑 이용이 증가하는 원인 두 가지는 무엇인가?\n• 온라인 쇼핑 증가로 인한 문제점과 해결 방안은 무엇인가?", plain:"다음을 참고하여 '온라인 쇼핑 이용 현황'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령대별 온라인 쇼핑 이용률은 어떠한가?\n• 온라인 쇼핑 이용이 증가하는 원인 두 가지는 무엇인가?\n• 온라인 쇼핑 증가로 인한 문제점과 해결 방안은 무엇인가?" },
-
-    // ⚠️ Practice prompts (not official past exam questions)
-    { exam:"연습문제", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'환경 보호에 대한 시민 인식 변화'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 환경 보호에 관심을 갖는 시민의 비율이 어떻게 변화했는가?\n• 관심이 높아진 주요 원인 두 가지는 무엇인가?\n• 시민들이 실천하는 환경 보호 활동에는 어떤 것들이 있는가?", plain:"다음을 참고하여 '환경 보호에 대한 시민 인식 변화'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 환경 보호에 관심을 갖는 시민의 비율이 어떻게 변화했는가?\n• 관심이 높아진 주요 원인 두 가지는 무엇인가?\n• 시민들이 실천하는 환경 보호 활동에는 어떤 것들이 있는가?" },
-
-    { exam:"연습문제", q:"Q53 (150–300자)", text:"다음을 참고하여 <strong>'스마트폰 과의존 실태'</strong>에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령별 스마트폰 과의존 위험군 비율은 어떠한가?\n• 과의존이 심한 연령대는 어디이며 그 원인은 무엇인가?\n• 스마트폰 과의존 문제를 해결하기 위한 방안은 무엇인가?", plain:"다음을 참고하여 '스마트폰 과의존 실태'에 대한 글을 200자 이상 300자 이하로 쓰시오.\n\n• 연령별 스마트폰 과의존 위험군 비율은 어떠한가?\n• 과의존이 심한 연령대는 어디이며 그 원인은 무엇인가?\n• 스마트폰 과의존 문제를 해결하기 위한 방안은 무엇인가?" },
-  ],
   5: [
     // ── Q54 / 고급 Q44 past exam prompts ─────────────────────
     // Q54 (TOPIK II): argumentative essay, 600–700자
@@ -580,15 +552,14 @@ function switchMode(mode) {
   currentMode = mode;
   cfEvent('mode_switched', { mode });
   document.querySelectorAll('.mode-tab').forEach((t, i) => {
-    t.classList.toggle('active', ['q53','q54','free','q5152'][i] === mode);
+    t.classList.toggle('active', ['q54','free','q5152'][i] === mode);
   });
-  document.getElementById('promptSection').style.display = (mode === 'q53' || mode === 'q54') ? '' : 'none';
+  document.getElementById('promptSection').style.display = mode === 'q54' ? '' : 'none';
   document.getElementById('freeWriteSection').style.display = mode === 'free' ? '' : 'none';
   document.getElementById('q5152Section').style.display = mode === 'q5152' ? '' : 'none';
   document.getElementById('gridControls').style.display = mode === 'q5152' ? 'none' : '';
   firedMilestones = new Set();
-  if (mode === 'q53') { currentLevel = 3; setTarget(document.querySelector('[data-min="150"]')); showPrompt(); }
-  else if (mode === 'q54') { currentLevel = 5; setTarget(document.querySelector('[data-min="600"]')); showPrompt(); }
+  if (mode === 'q54') { currentLevel = 5; setTarget(document.querySelector('[data-min="600"]')); showPrompt(); }
   else if (mode === 'free') { targetMin = 0; targetMax = 99999; document.getElementById('targetDisplay').textContent = '∞'; document.getElementById('remaining').textContent = '∞'; document.getElementById('targetLimits').style.display = 'none'; ROWS = 40; TOTAL = COLS * ROWS; buildGrid(); }
   else if (mode === 'q5152') { loadQ5152(); }
 }
@@ -895,6 +866,7 @@ function toggleRules() { const c=document.getElementById('rulesContent'),a=docum
 
 detectMobile();
 updateStreakDisplay(loadStreak());
+setTarget(document.querySelector('[data-min="600"]'));
 buildGrid();
 showPrompt();
 updateTimerDisplay();
