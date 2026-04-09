@@ -331,8 +331,8 @@
       <div class="rule"><div class="rule-num">1</div><div class="rule-text"><strong>One character per box.</strong> Each complete Hangul syllable block occupies exactly one cell.</div></div>
       <div class="rule"><div class="rule-num">2</div><div class="rule-text"><strong>Spaces count as 자.</strong> One empty box per space. Spaces ARE counted in your total 자.</div></div>
       <div class="rule"><div class="rule-num">3</div><div class="rule-text"><strong>Paragraph indent.</strong> Leave the first box of each paragraph empty. Press Enter to auto-indent.</div></div>
-      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation.</strong> One mark per box. <strong>No punctuation at the start of a line</strong> — the app will automatically move it to the last box of the previous line.</div></div>
-      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers: 2 digits per box.</strong> Pair digits left to right: <strong>20 → [20]</strong>, <strong>365 → [36][5]</strong>, <strong>2012 → [20][12]</strong>. Letters (Korean or alphabet) each get their own box. In essays, numbers over 99 are usually written in Korean words (삼백육십오) instead. Percentages and ages stay as digits: 50%, 20대.</div></div>
+      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>Punctuation placement.</strong> One mark per box. <strong>No punctuation at the start of a line</strong> — auto-moved to the last box of the previous line. <strong>Opening quotes/brackets ( " ( 「 ) cannot end a line</strong> — moved to the next line. <strong>After ! or ?</strong> leave one blank box before the next sentence (except at line end). <strong>Period or comma + closing quote</strong> share one box: ." counts as one.</div></div>
+      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>Numbers &amp; lowercase letters: 2 per box.</strong> Pair left to right: <strong>tv → [tv]</strong>, <strong>sns → [sn][s]</strong>, <strong>20 → [20]</strong>, <strong>365 → [36][5]</strong>. Uppercase letters and Korean each get their own box. In essays, numbers over 99 are usually written in Korean words (삼백육십오) instead.</div></div>
       <div class="rule"><div class="rule-num">6</div><div class="rule-text"><strong>Character limits.</strong> Q54: 600–700자 (points deducted outside range). 고급 Q44: 700–800자. Stay within range!</div></div>
       <div class="rule"><div class="rule-num">7</div><div class="rule-text"><strong>No title.</strong> Begin your essay directly — no title line.</div></div>
     </div>
@@ -378,6 +378,9 @@ function checkMilestones(written) {
 
 const COLS = 20;
 const PUNCTUATION = ['.', ',', '!', '?', '！', '？', '；', ';', '：', ':', '。', '，'];
+const OPENING_MARKS = ['"', '\u2018', '「', '『', '(', '\u201C'];
+const CLOSING_MARKS = ['"', '\u2019', '」', '』', ')', '\u201D'];
+const MERGE_WITH = ['.', ',', '。', '，', '!', '?', '！', '？'];
 const LANG_NAMES = { en:'English', zh:'中文', ja:'日本語', vi:'Tiếng Việt', mn:'Монгол', uz:"O'zbek", ru:'Русский', es:'Español' };
 const MYMEMORY_CODES = { en:'en', zh:'zh-CN', ja:'ja', vi:'vi', mn:'mn', uz:'uz', ru:'ru', es:'es' };
 
@@ -425,7 +428,7 @@ function setupMobileInput() {
       cell.classList.remove('error', 'num', 'active', 'indent', 'num-pending');
       if (i % COLS === 0) { cell.classList.add('row-start'); cell.dataset.row = Math.floor(i/COLS)+1; }
       if (content[i] === ' ' && i % COLS === 0) cell.classList.add('indent');
-      if (content[i] && /^\d{2}$/.test(content[i])) cell.classList.add('num');
+      if (content[i] && /^[a-z0-9]{2}$/.test(content[i])) cell.classList.add('num');
     });
     updateStats();
     checkSessionComplete();
@@ -726,7 +729,7 @@ function renderCell(idx) {
   cell.classList.remove('error','num','num-pending','indent');
   // Re-apply indent only if this cell is intentionally a paragraph-start space (col 0 with space)
   if (ch === ' ' && idx % COLS === 0) cell.classList.add('indent');
-  if (ch && /^\d{2}$/.test(ch)) cell.classList.add('num');
+  if (ch && /^[a-z0-9]{2}$/.test(ch)) cell.classList.add('num');
 }
 
 function updateStats() {
@@ -755,16 +758,52 @@ function updateStats() {
 
 function validateAndFixPunctuation(idx) {
   const col = idx % COLS, ch = content[idx];
-  if (col === 0 && ch && PUNCTUATION.includes(ch)) {
+  if (!ch) { clearMsg(); return false; }
+
+  // Rule A: ! or ? — insert a blank box after (unless at end of line)
+  if ((ch === '!' || ch === '?' || ch === '！' || ch === '？') && col !== COLS - 1) {
+    const next = idx + 1;
+    if (next < TOTAL && !content[next]) {
+      // leave next cell blank, skip cursor past it
+      setActiveCell(Math.min(next + 1, TOTAL - 1));
+      clearMsg(); return false;
+    }
+  }
+
+  // Rule B: opening marks cannot end a line — if placed in last col, push to next row
+  if (OPENING_MARKS.includes(ch) && col === COLS - 1) {
+    content[idx] = ''; renderCell(idx);
+    const nextRow = idx + 1;
+    if (nextRow < TOTAL) { content[nextRow] = ch; renderCell(nextRow); setActiveCell(nextRow + 1); }
+    showMsg('info', '💡 Opening quote/bracket moved to next line (Rule #4).');
+    return true;
+  }
+
+  // Rule C: closing mark after period/comma — merge into previous cell
+  if (CLOSING_MARKS.includes(ch)) {
+    const prev = idx - 1;
+    if (prev >= 0 && MERGE_WITH.includes(content[prev])) {
+      content[prev] = content[prev] + ch; renderCell(prev);
+      content[idx] = ''; renderCell(idx);
+      // cursor stays at idx (don't advance — already handled by caller)
+      clearMsg(); return true;
+    }
+  }
+
+  // Rule #4 (existing): closing punctuation cannot start a line
+  if (col === 0 && PUNCTUATION.includes(ch)) {
     const prev = idx - 1;
     if (prev >= 0) { content[prev]=ch; renderCell(prev); content[idx]=''; renderCell(idx); showMsg('info','💡 Punctuation auto-moved to end of previous line (Rule #4).'); setActiveCell(idx+1<TOTAL?idx+1:idx); return true; }
   }
+
   clearMsg(); return false;
 }
 
 function showMsg(type, text) { const cls=type==='error'?'error-msg':type==='success'?'success-msg':'info-msg'; document.getElementById('errorLog').innerHTML=`<div class="${cls}">${text}</div>`; }
 function clearMsg() { document.getElementById('errorLog').innerHTML=''; }
 function isDigit(ch) { return /^\d$/.test(ch); }
+function isLower(ch) { return /^[a-z]$/.test(ch); }
+function needsPairing(ch) { return isDigit(ch) || isLower(ch); }
 
 function commitNumPending() {
   if (!numPending) return;
@@ -772,9 +811,9 @@ function commitNumPending() {
   numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats();
 }
 
-function handleDigit(d) {
-  if (!numPending) { numPending=true; numFirst=d; numCell=activeCellIndex; cells[numCell].textContent=d; cells[numCell].classList.add('num-pending'); showMsg('info',`💡 Rule #5: Type second digit to pair in one box, or Space/Enter to commit "${d}" alone.`); }
-  else { const paired=numFirst+d; content[numCell]=paired; cells[numCell].classList.remove('num-pending'); renderCell(numCell); const next=numCell+1; numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats(); setActiveCell(Math.min(next,TOTAL-1)); }
+function handlePairable(ch) {
+  if (!numPending) { numPending=true; numFirst=ch; numCell=activeCellIndex; cells[numCell].textContent=ch; cells[numCell].classList.add('num-pending'); showMsg('info',`💡 Rule #5: Type second character to pair in one box, or Space/Enter to commit "${ch}" alone.`); }
+  else { const paired=numFirst+ch; content[numCell]=paired; cells[numCell].classList.remove('num-pending'); renderCell(numCell); const next=numCell+1; numPending=false; numFirst=''; numCell=-1; clearMsg(); updateStats(); setActiveCell(Math.min(next,TOTAL-1)); }
 }
 
 const hiddenInput = document.getElementById('hiddenInput');
@@ -801,7 +840,7 @@ hiddenInput.addEventListener('keydown', (e)=>{
 hiddenInput.addEventListener('input', (e)=>{
   if(isComposing) return;
   const val=hiddenInput.value; hiddenInput.value=''; if(!val) return;
-  for(const ch of [...val]){ if(isDigit(ch)){handleDigit(ch);} else{commitNumPending(); if(activeCellIndex<TOTAL){content[activeCellIndex]=ch; renderCell(activeCellIndex); validateAndFixPunctuation(activeCellIndex); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1));}} }
+  for(const ch of [...val]){ if(needsPairing(ch)){handlePairable(ch);} else{commitNumPending(); if(activeCellIndex<TOTAL){content[activeCellIndex]=ch; renderCell(activeCellIndex); validateAndFixPunctuation(activeCellIndex); setActiveCell(Math.min(activeCellIndex+1,TOTAL-1));}} }
   updateStats();
 });
 
@@ -844,7 +883,7 @@ function exportPNG() {
   ctx.fillText(`${modeLabel} · wongoji.com`,PADDING,48);
   const startX=PADDING,startY=HEADER_H+PADDING/2;
   ctx.strokeStyle='#bbbbbb'; ctx.lineWidth=1;
-  for(let row=0;row<usedRows;row++){for(let col=0;col<COLS;col++){const x=startX+col*CELL_SIZE,y=startY+row*CELL_SIZE,ch=content[row*COLS+col]||''; ctx.fillStyle=ch===' '&&col===0?'#f5f5f5':'#ffffff'; ctx.fillRect(x,y,CELL_SIZE,CELL_SIZE); ctx.strokeRect(x,y,CELL_SIZE,CELL_SIZE); if(ch&&ch!==' '){ctx.fillStyle='#2c2c2c'; ctx.font=`${/^\d{2}$/.test(ch)?11:16}px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(ch,x+CELL_SIZE/2,y+CELL_SIZE/2);}}}
+  for(let row=0;row<usedRows;row++){for(let col=0;col<COLS;col++){const x=startX+col*CELL_SIZE,y=startY+row*CELL_SIZE,ch=content[row*COLS+col]||''; ctx.fillStyle=ch===' '&&col===0?'#f5f5f5':'#ffffff'; ctx.fillRect(x,y,CELL_SIZE,CELL_SIZE); ctx.strokeRect(x,y,CELL_SIZE,CELL_SIZE); if(ch&&ch!==' '){ctx.fillStyle='#2c2c2c'; ctx.font=`${/^[a-z0-9]{2}$/.test(ch)?11:16}px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(ch,x+CELL_SIZE/2,y+CELL_SIZE/2);}}}
   ctx.strokeStyle='#2c2c2c'; ctx.lineWidth=2; ctx.strokeRect(startX,startY,COLS*CELL_SIZE,usedRows*CELL_SIZE);
   ctx.fillStyle='#888'; ctx.font='11px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
   ctx.fillText(`${written}자 written · wongoji.com`,startX,startY+usedRows*CELL_SIZE+18);
