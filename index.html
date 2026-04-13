@@ -169,7 +169,7 @@
       <span class="streak-count" id="streakCount">0</span>
       <span class="streak-label">day streak</span>
     </div>
-    <span class="version">Beta v0.7</span>
+    <span class="version">Beta v0.8</span>
   </div>
 </header>
 
@@ -241,17 +241,19 @@
     </div>
     <div class="short-answer-box">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <h3 style="margin:0;">Q52 — Sentence Rewriting (문장 고쳐 쓰기)</h3>
+        <h3 style="margin:0;">Q52 — Fill in the Blanks (빈칸 채우기)</h3>
         <div style="display:flex;align-items:center;gap:6px;">
           <button class="nav-btn" id="q52prevBtn" onclick="prevQ52()" disabled>◀</button>
           <span id="q52counter" style="font-size:12px;color:#888;font-weight:600;">1 / 5</span>
           <button class="nav-btn" id="q52nextBtn" onclick="nextQ52()">▶</button>
         </div>
       </div>
-      <p>Rewrite the sentence in formal written Korean (문어체). Change informal/spoken style to formal essay style.</p>
+      <p>Read the passage and write appropriate sentences for each blank. Each answer should be 1–2 sentences.</p>
       <div class="short-answer-prompt" id="q52prompt"></div>
-      <div class="answer-line-label">Your rewritten sentence:</div>
-      <input type="text" class="answer-line" id="q52answer" placeholder="문어체로 고쳐 쓰세요...">
+      <div class="answer-line-label">① Answer:</div>
+      <input type="text" class="answer-line" id="q52answer1" placeholder="첫 번째 빈칸에 들어갈 내용을 쓰세요...">
+      <div class="answer-line-label">② Answer:</div>
+      <input type="text" class="answer-line" id="q52answer2" placeholder="두 번째 빈칸에 들어갈 내용을 쓰세요...">
     </div>
 
   </div>
@@ -340,7 +342,7 @@
 
 </div>
 
-<footer>wongoji.com · Korean Writing Practice · Beta v0.7</footer>
+<footer>wongoji.com · Korean Writing Practice · Beta v0.8</footer>
 <canvas id="exportCanvas" style="display:none"></canvas>
 
 <script>
@@ -535,7 +537,8 @@ function renderQ52() {
   const p = q52Prompts[q52Index];
   const badge = `<span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;background:#f0f0f0;padding:2px 8px;border-radius:10px;margin-bottom:8px;">${p.exam}</span><br>`;
   document.getElementById('q52prompt').innerHTML = badge + p.text.replace(/\n/g, '<br>');
-  document.getElementById('q52answer').value = '';
+  document.getElementById('q52answer1').value = '';
+  document.getElementById('q52answer2').value = '';
   document.getElementById('q52counter').textContent = `${q52Index + 1} / ${q52Prompts.length}`;
   document.getElementById('q52prevBtn').disabled = q52Index === 0;
   document.getElementById('q52nextBtn').disabled = q52Index === q52Prompts.length - 1;
@@ -561,6 +564,10 @@ function switchMode(mode) {
   document.getElementById('freeWriteSection').style.display = mode === 'free' ? '' : 'none';
   document.getElementById('q5152Section').style.display = mode === 'q5152' ? '' : 'none';
   document.getElementById('gridControls').style.display = mode === 'q5152' ? 'none' : '';
+  // Hide translate dropdown in q5152 — no prompt array to translate
+  const langRow = document.querySelector('.lang-row');
+  if (langRow) langRow.style.display = mode === 'q5152' ? 'none' : '';
+  if (mode !== 'q54') hideTranslation();
   firedMilestones = new Set();
   if (mode === 'q54') { currentLevel = 5; setTarget(document.querySelector('[data-min="600"]')); showPrompt(); }
   else if (mode === 'free') { targetMin = 0; targetMax = 99999; document.getElementById('targetDisplay').textContent = '∞'; document.getElementById('remaining').textContent = '∞'; document.getElementById('targetLimits').style.display = 'none'; ROWS = 40; TOTAL = COLS * ROWS; buildGrid(); }
@@ -688,6 +695,16 @@ function showPrompt() {
   document.getElementById('promptCounter').textContent = `${idx+1} / ${pool.length}`;
   document.getElementById('prevBtn').disabled = idx === 0;
   document.getElementById('nextBtn').disabled = idx === pool.length-1;
+  // Auto-adjust target for 고급 Q44 (700–800자) vs standard Q54 (600–700자)
+  if (p.q && p.q.includes('700–800')) {
+    targetMin = 700; targetMax = 800;
+    document.getElementById('targetDisplay').textContent = '700–800';
+    document.getElementById('remaining').textContent = Math.max(0, 800 - content.filter(c=>c!=='').length);
+    document.getElementById('targetLimits').style.display = '';
+    document.querySelectorAll('.limit-tag').forEach(t => t.classList.remove('active'));
+  } else {
+    if (targetMin !== 600) { setTarget(document.querySelector('[data-min="600"]')); }
+  }
   if (currentLang) translatePrompt(currentLang); else hideTranslation();
 }
 
